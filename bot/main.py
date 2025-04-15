@@ -1,13 +1,17 @@
 import asyncio
 import logging
 
-from loader import bot, main_router, dp
+from loader import loader, bot
 
 
 async def main():
-    dp.include_router(main_router)
-    await dp.start_polling(bot)
-
+    # await dp.start_polling(bot)
+    runner = await loader()
+    try:
+        await asyncio.Future()
+    finally:
+        await runner.cleanup()
+        await bot.session.close()
 
 if __name__ == '__main__':
     logging.basicConfig(level='INFO')
