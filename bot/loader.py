@@ -1,4 +1,5 @@
 from aiohttp import web
+import logging
 
 from aiogram import Dispatcher, Router, Bot
 from aiogram.client.default import DefaultBotProperties
@@ -35,8 +36,13 @@ async def _on_startup(bot_instance: Bot) -> None:
 
     :param bot_instance: Текущий бот
     """
-
-    await bot_instance.set_webhook(f'{WEBHOOK_URL}/{WEBHOOK_PATH}')
+    print(f'ПУТЬ {WEBHOOK_URL}{WEBHOOK_PATH}')
+    logging.info(f'ПУТЬ {WEBHOOK_URL}{WEBHOOK_PATH}')
+    try:
+        await bot_instance.set_webhook(f'{WEBHOOK_URL}{WEBHOOK_PATH}')
+    except Exception as e:
+        print(f'ОШИБКА {e}')
+        logging.error(f'ОШИБКА {e}')
 
 
 async def _on_shutdown(bot_instance: Bot) -> None:
