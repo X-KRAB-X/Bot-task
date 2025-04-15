@@ -65,7 +65,7 @@ async def loader() -> web.AppRunner:
 
     # Создаем обработчик webhook'ов
     webhook_request_handler = SimpleRequestHandler(dispatcher=dp, bot=bot)
-    webhook_request_handler.register(app, path=WEBHOOK_PATH)
+    webhook_request_handler.register(app, path=f'{WEBHOOK_URL}{WEBHOOK_PATH}')
 
     runner = web.AppRunner(app)
     await runner.setup()
