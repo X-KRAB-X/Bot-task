@@ -30,7 +30,7 @@ dp = Dispatcher()
 dp.include_router(main_router)
 
 
-async def _on_startup(bot_instance: Bot) -> None:
+async def _set_webhook(bot_instance: Bot) -> None:
     """
     Функция для инициализации webhook'а боту.
 
@@ -45,7 +45,7 @@ async def _on_startup(bot_instance: Bot) -> None:
         logging.error(f'ОШИБКА {e}')
 
 
-async def _on_shutdown(bot_instance: Bot) -> None:
+async def clear_webhook(bot_instance: Bot) -> None:
     """
     Функция для очистки webhook'а у бота.
 
@@ -57,8 +57,9 @@ async def _on_shutdown(bot_instance: Bot) -> None:
 async def loader() -> web.AppRunner:
 
     # Инициализируем webhook
-    dp.startup.register(_on_startup)
-    dp.shutdown.register(_on_shutdown)
+    await _set_webhook(bot_instance=bot)
+
+    # dp.shutdown.register(_on_shutdown)
 
     # Создаем веб-приложение
     app = web.Application()
