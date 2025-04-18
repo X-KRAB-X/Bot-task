@@ -16,6 +16,7 @@ from config.config import (
 )
 
 from handlers.default_handlers import default_router
+from handlers.custom_handlers import custom_router
 
 
 # Создаем бота
@@ -23,7 +24,7 @@ bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTM
 
 # Создаем главный роутер
 main_router = Router()
-main_router.include_router(default_router)
+main_router.include_routers(default_router, custom_router)
 
 # Создаем диспетчера
 dp = Dispatcher()
