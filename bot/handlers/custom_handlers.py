@@ -17,6 +17,7 @@ async def get_request_handler(message: Message):
     try:
         logging.info(f'Отправляю запрос на URL {API_URL + 'posts/1'}')
         data = await get_json_response(API_URL, 'posts/1')
+        print(type(data))
     except Exception as e:
         logging.error(f'Произошла ошибка при запросе:\n{e}')
         await message.answer('Произошла ошибка при запросе, проверьте логи')
