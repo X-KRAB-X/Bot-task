@@ -1,4 +1,5 @@
 import logging
+import json
 
 from aiogram import Router
 from aiogram.filters import Command
@@ -17,9 +18,9 @@ async def get_request_handler(message: Message):
     try:
         logging.info(f'Отправляю запрос на URL {API_URL + 'posts/1'}')
         data = await get_json_response(API_URL, 'posts/1')
-        print(type(data))
+        serialized_data = json.dumps(data, indent=4)
     except Exception as e:
         logging.error(f'Произошла ошибка при запросе:\n{e}')
         await message.answer('Произошла ошибка при запросе, проверьте логи')
     else:
-        await message.answer(f'Было получен ответ JSON:\n{data}')
+        await message.answer(f'Было получен ответ JSON:\n{serialized_data}')
