@@ -36,13 +36,11 @@ async def _set_webhook(bot_instance: Bot) -> None:
 
     :param bot_instance: Текущий бот
     """
-    print(f'ПУТЬ {WEBHOOK_URL}{WEBHOOK_PATH}')
-    logging.info(f'ПУТЬ {WEBHOOK_URL}{WEBHOOK_PATH}')
     try:
         await bot_instance.set_webhook(f'{WEBHOOK_URL}{WEBHOOK_PATH}')
+        logging.info(f'Установлен путь для вебхука: {WEBHOOK_URL}{WEBHOOK_PATH}')
     except Exception as e:
-        print(f'ОШИБКА {e}')
-        logging.error(f'ОШИБКА {e}')
+        logging.error(f'Произошла ошибка при установке вебхука:\n{e}')
 
 
 async def clear_webhook(bot_instance: Bot) -> None:
@@ -51,15 +49,21 @@ async def clear_webhook(bot_instance: Bot) -> None:
 
     :param bot_instance: Текущий бот
     """
+    logging.info(f'Установлен путь для вебхука: {WEBHOOK_URL}{WEBHOOK_PATH}')
+    try:
+        await bot_instance.delete_webhook(drop_pending_updates=True)
+    except Exception as e:
+        logging.error(f'Произошла ошибка при очистке вебхука:\n{e}')
 
-    await bot_instance.delete_webhook(drop_pending_updates=True)
 
 async def loader() -> web.AppRunner:
+    """
+    Сборка и настройка всех частей бота:
+    Веб-приложение и Вебхук для бота
+    """
 
     # Инициализируем webhook
     await _set_webhook(bot_instance=bot)
-
-    # dp.shutdown.register(_on_shutdown)
 
     # Создаем веб-приложение
     app = web.Application()
