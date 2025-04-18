@@ -19,8 +19,9 @@ async def get_command_handler(message: Message, state: State):
 
     # Устанавливаем состояние
     await state.set_state(APIResponseStates.which_url)
+    logging.info('Установлено состояние - WHICH_URL')
 
-    await message.answer(f'Отправляем запрос по URL {API_URL, 'posts/1'}\nКакой путь?')
+    await message.answer(f'Отправляем запрос по URL {API_URL}\nКакой путь?')
 
 
 @custom_router.message(APIResponseStates.which_url)
@@ -28,15 +29,18 @@ async def get_setting_path_handler(message: Message, state: State):
 
     # Сохраняем полученный ответ - путь
     await state.update_data(which_url=message.text)
+    logging.info(f'Получено значение {message.text}. Состояние - WHICH_URL')
 
     # Устанавливаем след. состояние
     await state.set_state(APIResponseStates.which_resource)
+    logging.info('Установлено состояние - WHICH_RESOURCE')
 
     await message.answer('Какой id ресурса? От 1 до 100')
 
 
-@custom_router.message(APIResponseStates.which_url)
+@custom_router.message(APIResponseStates.which_resource)
 async def get_response_data_handler(message: Message, state: State):
+    logging.info(f'Получено значение {message.text}. Состояние - WHICH_RESOURCE')
 
     # Сохраняем и получаем указанный путь и id ресурса
     state_data = await state.update_data(which_resource=message.text)
