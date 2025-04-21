@@ -59,7 +59,7 @@ async def get_response_data_handler(message: Message, state: State):
             state_data['which_url'] + '/' + state_data['which_resource']
         )
 
-        data = from_camel_to_snake_json_keys(data)
+        data = await from_camel_to_snake_json_keys(data)
         serialized_data = json.dumps(data, indent=4)
 
 
