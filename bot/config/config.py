@@ -18,3 +18,6 @@ WEBHOOK_PATH = '/webhook'
 WEBHOOK_URL = 'https://andrey-bokarev.ru'
 
 # -- Webhooks --
+
+# -- API --
+API_URL = 'https://jsonplaceholder.typicode.com/'
