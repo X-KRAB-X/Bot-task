@@ -18,6 +18,11 @@ from config.config import (
 from handlers.default_handlers import default_router
 from handlers.custom_handlers import custom_router
 
+# БД
+from models.db import create_tables
+from middlewares.middlewares import InjectableMiddleware
+
+from injectable import load_injection_container
 
 # Создаем бота
 bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
@@ -29,6 +34,8 @@ main_router.include_routers(custom_router, default_router)
 # Создаем диспетчера
 dp = Dispatcher()
 dp.include_router(main_router)
+
+
 
 
 async def _set_webhook(bot_instance: Bot) -> None:
@@ -60,8 +67,15 @@ async def clear_webhook(bot_instance: Bot) -> None:
 async def loader() -> web.AppRunner:
     """
     Сборка и настройка всех частей бота:
-    Веб-приложение и Вебхук для бота
+    Веб-приложение, Вебхук для бота, БД
     """
+
+    # Создаем таблицы БД если их нет
+    await create_tables()
+
+    # Регистрация middleware БД
+    dp.message.outer_middleware(InjectableMiddleware())
+    load_injection_container()
 
     # Инициализируем webhook
     await _set_webhook(bot_instance=bot)

@@ -20,4 +20,13 @@ WEBHOOK_URL = 'https://andrey-bokarev.ru'
 # -- Webhooks --
 
 # -- API --
+
 API_URL = 'https://jsonplaceholder.typicode.com/'
+
+# -- API --
+
+# -- DATABASE --
+
+DATABASE_URL = 'postgresql+asyncpg://andrey:joker2500@localhost/test_base'
+
+# -- DATABASE --
