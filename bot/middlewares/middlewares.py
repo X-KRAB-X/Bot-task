@@ -2,20 +2,30 @@
 Данный модуль содержит в себе классы-middleware для бота.
 """
 
+from typing import Annotated
+
 from aiogram.types import TelegramObject
-from injectable import load_injection_container, injectable, InjectionContainer
+from injectable import injectable, autowired, Autowired
 
 from service.db import Posts
 
 
+@injectable
 class InjectableMiddleware:
     """
     Middleware для загрузки контейнера injectable.
     Дабавляет в контекст хендлера классы-сервисы БД.
     """
 
-    async def __call__(self, handler, event: TelegramObject, dict):
-        load_injection_container()
+    @autowired
+    def __init__(
+            self,
+            posts: Annotated[Posts, Autowired],
+            # Здесь еще классы будут
+    ):
+        self.posts = posts
 
-        data['posts'] = InjectionContainer.get(Posts)
+    async def __call__(self, handler, event: TelegramObject, dict):
+
+        data['posts'] = self.posts
         return await handler(event, data)
