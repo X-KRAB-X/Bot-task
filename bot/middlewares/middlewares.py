@@ -3,9 +3,10 @@
 """
 
 from aiogram.types import TelegramObject
-from injectable import load_injection_container, injectable, InjectionContainer
+from injectable import load_injection_container, injectable, get
 
 from service.db import Posts
+
 
 class InjectableMiddleware:
     """
@@ -16,5 +17,5 @@ class InjectableMiddleware:
     async def __call__(self, handler, event: TelegramObject, dict):
         load_injection_container()
 
-        data['posts'] = injectable.get(Posts)
+        data['posts'] = get(Posts)
         return await handler(event, data)
