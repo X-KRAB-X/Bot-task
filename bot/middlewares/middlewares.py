@@ -25,7 +25,7 @@ class InjectableMiddleware:
     ):
         self.posts = posts
 
-    async def __call__(self, handler, event: TelegramObject, dict):
+    async def __call__(self, handler, event: TelegramObject, data):
 
         data['posts'] = self.posts
         return await handler(event, data)
