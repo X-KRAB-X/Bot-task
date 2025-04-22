@@ -14,8 +14,7 @@ class InjectableMiddleware:
     """
 
     async def __call__(self, handler, event: TelegramObject, dict):
-        if not InjectionContainer.is_loaded():
-            load_injection_container()
+        load_injection_container()
 
         data['posts'] = injectable.get(Posts)
         return await handler(event, data)
