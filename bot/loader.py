@@ -70,12 +70,13 @@ async def loader() -> web.AppRunner:
     Веб-приложение, Вебхук для бота, БД
     """
 
+    load_injection_container()
+
     # Создаем таблицы БД если их нет
     await create_tables()
 
     # Регистрация middleware БД
     dp.message.outer_middleware(InjectableMiddleware())
-    load_injection_container()
 
     # Инициализируем webhook
     await _set_webhook(bot_instance=bot)
