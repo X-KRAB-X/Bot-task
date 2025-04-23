@@ -5,10 +5,13 @@ from aiogram import Router
 from aiogram.filters import Command
 from aiogram.types import Message
 from aiogram.fsm.state import State
+from sqlalchemy.exc import SQLAlchemyError
 
 from api.api import get_json_response
 from config.config import API_URL
 from states.states import APIResponseStates
+from models.pydantic_api import PostModel
+
 from .utils import from_camel_to_snake_json_keys
 
 
@@ -40,7 +43,7 @@ async def get_setting_path_handler(message: Message, state: State):
 
 
 @custom_router.message(APIResponseStates.which_resource)
-async def get_response_data_handler(message: Message, state: State):
+async def get_response_data_handler(message: Message, state: State, posts):
     logging.info(f'Получено значение {message.text}. Состояние - WHICH_RESOURCE')
 
     # Сохраняем и получаем указанный путь и id ресурса
@@ -59,15 +62,19 @@ async def get_response_data_handler(message: Message, state: State):
             state_data['which_url'] + '/' + state_data['which_resource']
         )
 
+        # Трансформируем ключи из CamelCase в snake_case
         data = await from_camel_to_snake_json_keys(data)
-        serialized_data = json.dumps(data, indent=4)
 
+        serialized_data = PostModel(**data)
+        saved_data = posts.create_post(serialized_data)
 
+    except SQLAlchemyError as e:
+        await message.answer('Какая-то ошибка при сохранении в БД, проверьте логи')
     except Exception as e:
         logging.error(f'Произошла ошибка при запросе:\n{e}')
         await message.answer('Произошла ошибка при запросе, проверьте логи')
     else:
-        await message.answer(f'Было получен ответ JSON:\n{serialized_data}')
+        await message.answer(f'Было получен и сохранен в БД ответ JSON:\n{saved_data}')
 
     # Очищаем состояние
     await state.clear()
