@@ -15,8 +15,8 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import SQLAlchemyError
 
-from bot.models.db import engine, PostDBModel
-from bot.models.pydantic_api import PostModel, PostModelFromDB
+from models.db import engine, PostDBModel
+from models.pydantic_api import PostModel, PostModelFromDB
 
 
 @injectable

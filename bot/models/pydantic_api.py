@@ -8,7 +8,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, validator, Field, ConfigDict
 
-from bot.models.db import PhotoDBModel
+from models.db import PhotoDBModel
 
 
 class _DBMixin(BaseModel):

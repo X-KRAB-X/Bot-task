@@ -7,7 +7,7 @@ from typing import Annotated
 from aiogram.types import TelegramObject
 from injectable import injectable, autowired, Autowired
 
-from bot.service.db import Posts
+from service.db import Posts
 
 
 @injectable

@@ -9,7 +9,7 @@ from sqlalchemy import Integer, String, Identity, DateTime, Boolean, Float, Fore
 from sqlalchemy.orm import declarative_base, Mapped, mapped_column, relationship
 from sqlalchemy.ext.asyncio import create_async_engine
 
-from bot.config.config import DATABASE_URL
+from config.config import DATABASE_URL
 
 
 engine = create_async_engine(url=DATABASE_URL, echo=True) # echo=True для тестов
