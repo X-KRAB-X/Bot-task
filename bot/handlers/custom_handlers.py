@@ -66,9 +66,10 @@ async def get_response_data_handler(message: Message, state: State, posts):
         data = await from_camel_to_snake_json_keys(data)
 
         serialized_data = PostModel(**data)
-        saved_data = await posts.create_post(serialized_data)
+        saved_data = await posts.create_post(serialized_data, message.from_user.id)
 
     except SQLAlchemyError as e:
+        logging.error(f'Произошла ошибка при при сохранении в БД:\n{e}')
         await message.answer('Какая-то ошибка при сохранении в БД, проверьте логи')
     except Exception as e:
         logging.error(f'Произошла ошибка при запросе:\n{e}')

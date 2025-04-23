@@ -88,10 +88,12 @@ class Posts:
             logging.error(f'Ошибка при получении поста:\n{e}')
             raise
 
-    async def create_post(self, post_pydantic: PostModel) -> str:
+    async def create_post(self, post_pydantic: PostModel, telegram_user_id) -> str:
         """
         Метод получает модель Pydantic, сохраняет запись в БД и возвращает новую Pydantic модель
         :param post_pydantic: Проверенные данные Pydantic.
+        :param telegram_user_id: ID пользователя, который отправил сообщение боту.
+
         :return: JSON-Pydantic модель на основе записи из базы данных, в качестве подтверждения.
         """
 
@@ -101,6 +103,9 @@ class Posts:
                 # Создаем объект модели
                 post_api_data = post_pydantic.model_dump()
                 post_db = PostDBModel(**post_api_data)
+
+                # Отдельно добавляем Telegram ID
+                post_db.telegram_user_id = telegram_user_id
 
                 db.add(post_db)
 
