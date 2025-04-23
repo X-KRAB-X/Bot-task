@@ -1,3 +1,9 @@
+"""
+Архитектура выглядит таким образом:
+ABS Class __init__ ---> `Классы для создания записей в таблицах` ---> Class Service для передачи в хендлеры.
+"""
+
+
 from contextlib import asynccontextmanager
 from typing import Annotated
 import logging
@@ -45,6 +51,7 @@ class DBAsyncSessionManager:
             finally:
                 await session.close()
 
+# TODO Сделать общий класс для настройки
 
 @injectable
 class Posts:
@@ -79,7 +86,7 @@ class Posts:
             logging.error(f'Ошибка при получении поста:\n{e}')
             raise
 
-    async def create_post(self, post_pydantic):
+    async def create_post(self, post_pydantic) -> dict:
         """
         Метод создающий запись о полученном посте.
         -- все будет переделано --
