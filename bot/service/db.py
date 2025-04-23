@@ -15,8 +15,8 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import SQLAlchemyError
 
-from models.db import engine, PostDBModel
-from models.pydantic_api import PostModel
+from bot.models.db import engine, PostDBModel
+from bot.models.pydantic_api import PostModel, PostModelFromDB
 
 
 @injectable
@@ -71,12 +71,14 @@ class Posts:
         """
         try:
             async with self.db_session_manager.session() as db:
+
+                # Создаем запрос и получаем данные
                 query = select(PostDBModel).where(PostDBModel.id == post_id)
                 result = await db.execute(query)
                 post = result.scalar_or_none()
 
                 if post:
-                    post_validated = PostModel.model_validate(post)
+                    post_validated = PostModelFromDB.model_validate(post)
 
                     # Возвращаем JSON ответ
                     return post_validated.model_dump_json()
@@ -86,28 +88,28 @@ class Posts:
             logging.error(f'Ошибка при получении поста:\n{e}')
             raise
 
-    async def create_post(self, post_pydantic) -> dict:
+    async def create_post(self, post_pydantic: PostModel) -> str:
         """
-        Метод создающий запись о полученном посте.
-        -- все будет переделано --
+        Метод получает модель Pydantic, сохраняет запись в БД и возвращает новую Pydantic модель
         :param post_pydantic: Проверенные данные Pydantic.
         :return: JSON-Pydantic модель на основе записи из базы данных, в качестве подтверждения.
         """
 
         async with self.db_session_manager.session() as db:
             try:
-                post_db = PostDBModel(
-                    user_id=post_pydantic.user_id,
-                    title=post_pydantic.title,
-                    body=post_pydantic.body
-                )
+
+                # Создаем объект модели
+                post_api_data = post_pydantic.model_dump()
+                post_db = PostDBModel(**post_api_data)
 
                 db.add(post_db)
 
+                # Обновляем объект и получаем поля из БД
                 await db.flush()
                 await db.refresh(post_db)
 
-                post_validated = PostModel.model_validate(post_db)
+                # Возвращаем сериализованный JSON объект
+                post_validated = PostModelFromDB.model_validate(post_db)
                 return post_validated.model_dump_json()
 
             except SQLAlchemyError as e:
