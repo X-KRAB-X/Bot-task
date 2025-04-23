@@ -43,7 +43,7 @@ async def get_setting_path_handler(message: Message, state: State):
 
 
 @custom_router.message(APIResponseStates.which_resource)
-async def get_response_data_handler(message: Message, state: State, posts):
+async def get_response_data_handler(message: Message, state: State, db):
     logging.info(f'Получено значение {message.text}. Состояние - WHICH_RESOURCE')
 
     # Сохраняем и получаем указанный путь и id ресурса
@@ -66,7 +66,7 @@ async def get_response_data_handler(message: Message, state: State, posts):
         data = await from_camel_to_snake_json_keys(data)
 
         serialized_data = PostModel(**data)
-        saved_data = await posts.create_post(serialized_data, message.from_user.id)
+        saved_data = await db.create_post(serialized_data, message.from_user.id)
 
     except SQLAlchemyError as e:
         logging.error(f'Произошла ошибка при при сохранении в БД:\n{e}')

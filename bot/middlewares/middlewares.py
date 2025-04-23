@@ -7,7 +7,7 @@ from typing import Annotated
 from aiogram.types import TelegramObject
 from injectable import injectable, autowired, Autowired
 
-from service.db import Posts
+from service.db import ServiceDB
 
 
 @injectable
@@ -20,12 +20,12 @@ class InjectableMiddleware:
     @autowired
     def __init__(
             self,
-            posts: Annotated[Posts, Autowired],
+            db: Annotated[ServiceDB, Autowired],
             # Здесь еще классы будут
     ):
-        self.posts = posts
+        self.db = db
 
     async def __call__(self, handler, event: TelegramObject, data):
 
-        data['posts'] = self.posts
+        data['db'] = self.db
         return await handler(event, data)

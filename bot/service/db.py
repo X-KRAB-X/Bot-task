@@ -53,40 +53,49 @@ class DBAsyncSessionManager:
 
 # TODO Сделать общий класс для настройки
 
+
 @injectable
-class Posts:
+class _ServiceBase:
     """
-    Сервисный класс.
-    Служит для выполнения запросов к таблице БД - -?
+    Базовый класс сервисов.
+    Создает менеджера сессии
     """
 
     @autowired
     def __init__(self, db_session_manager: Annotated[DBAsyncSessionManager, Autowired]):
         self.db_session_manager = db_session_manager
 
-    async def get_post(self, post_id):
-        """
-        Метод для получения поста из БД.
-        Пока что не задуман для использования.
-        """
-        try:
-            async with self.db_session_manager.session() as db:
 
-                # Создаем запрос и получаем данные
-                query = select(PostDBModel).where(PostDBModel.id == post_id)
-                result = await db.execute(query)
-                post = result.scalar_or_none()
+@injectable
+class _Posts(_ServiceBase):
+    """
+    Сервисный класс для работы с постами.
+    Реализует метод create, который отвечает за сохранение в БД поста и ID тг-пользователя.
+    """
 
-                if post:
-                    post_validated = PostModelFromDB.model_validate(post)
-
-                    # Возвращаем JSON ответ
-                    return post_validated.model_dump_json()
-                else:
-                    return None
-        except Exception as e:
-            logging.error(f'Ошибка при получении поста:\n{e}')
-            raise
+    # async def get_post(self, post_id):
+    #     """
+    #     Метод для получения поста из БД.
+    #     Пока что не задуман для использования.
+    #     """
+    #     try:
+    #         async with self.db_session_manager.session() as db:
+    #
+    #             # Создаем запрос и получаем данные
+    #             query = select(PostDBModel).where(PostDBModel.id == post_id)
+    #             result = await db.execute(query)
+    #             post = result.scalar_or_none()
+    #
+    #             if post:
+    #                 post_validated = PostModelFromDB.model_validate(post)
+    #
+    #                 # Возвращаем JSON ответ
+    #                 return post_validated.model_dump_json()
+    #             else:
+    #                 return None
+    #     except Exception as e:
+    #         logging.error(f'Ошибка при получении поста:\n{e}')
+    #         raise
 
     async def create_post(self, post_pydantic: PostModel, telegram_user_id) -> str:
         """
@@ -120,3 +129,12 @@ class Posts:
             except SQLAlchemyError as e:
                 logging.error(f'Ошибка при сохранении поста:\n{e}')
                 raise
+
+
+@injectable
+class ServiceDB(_Posts):
+    """
+    Класс-сервис.
+    Объединяет в себе методы для работы со всеми моделями БД, предоставляя единый интерфейс управления.
+    """
+    pass
