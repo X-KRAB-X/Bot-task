@@ -12,7 +12,9 @@ from config.config import (
     WEB_SERVER_HOST,
     WEB_SERVER_PORT,
     WEBHOOK_URL,
-    WEBHOOK_PATH
+    WEBHOOK_PATH,
+
+    BOT_COMMANDS
 )
 
 from handlers.default_handlers import default_router
@@ -67,9 +69,13 @@ async def clear_webhook(bot_instance: Bot) -> None:
 async def loader() -> web.AppRunner:
     """
     Сборка и настройка всех частей бота:
-    Веб-приложение, Вебхук для бота, БД
+    Веб-приложение, Вебхук для бота, БД, команды.
     """
 
+    # Загрузка команд в бота
+    await bot.set_my_commands(BOT_COMMANDS)
+
+    # Загрузка контейнера для зависимостей
     load_injection_container()
 
     # Создаем таблицы БД если их нет
