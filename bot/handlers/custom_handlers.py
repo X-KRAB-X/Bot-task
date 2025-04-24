@@ -5,16 +5,29 @@ from aiogram import Router
 from aiogram.filters import Command
 from aiogram.types import Message
 from aiogram.fsm.state import State
+from sqlalchemy.exc import SQLAlchemyError
 
 from api.api import get_json_response
 from config.config import API_URL
 from states.states import APIResponseStates
+
+# Pydantic
+from models.pydantic_api import (
+    UserModel,
+    PostModel,
+    CommentModel,
+    AlbumModel,
+    PhotoModel,
+    TodoModel
+)
+
 from .utils import from_camel_to_snake_json_keys
 
 
 custom_router = Router(name='custom_router')
 
-# TODO Добавить валидацию для вводимых полей
+# TODO Добавить кнопки заместо валидации
+
 @custom_router.message(Command(commands=['get']))
 async def get_command_handler(message: Message, state: State):
 
@@ -27,26 +40,30 @@ async def get_command_handler(message: Message, state: State):
 
 @custom_router.message(APIResponseStates.which_url)
 async def get_setting_path_handler(message: Message, state: State):
+    if message.text == 'отмена':
+        await state.clear()
 
-    # Сохраняем полученный ответ - путь
-    await state.update_data(which_url=message.text)
-    logging.info(f'Получено значение {message.text}. Состояние - WHICH_URL')
+    else:
+        # Сохраняем полученный ответ - путь
+        await state.update_data(which_url=message.text)
+        logging.info(f'Получено значение {message.text}. Состояние - WHICH_URL')
 
-    # Устанавливаем след. состояние
-    await state.set_state(APIResponseStates.which_resource)
-    logging.info('Установлено состояние - WHICH_RESOURCE')
+        # Устанавливаем след. состояние
+        await state.set_state(APIResponseStates.which_resource)
+        logging.info('Установлено состояние - WHICH_RESOURCE')
 
-    await message.answer('Какой id ресурса? От 1 до 100')
+        await message.answer('Какой id ресурса? От 1 до 100')
 
 
 @custom_router.message(APIResponseStates.which_resource)
-async def get_response_data_handler(message: Message, state: State):
+async def get_response_data_handler(message: Message, state: State, db):
     logging.info(f'Получено значение {message.text}. Состояние - WHICH_RESOURCE')
 
     # Сохраняем и получаем указанный путь и id ресурса
     state_data = await state.update_data(which_resource=message.text)
 
     await message.answer('Отправляю запрос и собираю данные..')
+
     try:
         logging.info('Отправляю запрос на URL {API_URL}{which_url}/{which_resource}'.format(
             API_URL=API_URL,
@@ -59,15 +76,23 @@ async def get_response_data_handler(message: Message, state: State):
             state_data['which_url'] + '/' + state_data['which_resource']
         )
 
+        # Трансформируем ключи из CamelCase в snake_case
         data = await from_camel_to_snake_json_keys(data)
-        serialized_data = json.dumps(data, indent=4)
 
+        serialized_data = PostModel(**data)
+        saved_data = await db.create_post(serialized_data, message.from_user.id)
+
+
+    except SQLAlchemyError as e:
+        logging.error(f'Произошла ошибка при при сохранении в БД:\n{e}')
+        await message.answer('Какая-то ошибка при сохранении в БД, проверьте логи')
 
     except Exception as e:
         logging.error(f'Произошла ошибка при запросе:\n{e}')
         await message.answer('Произошла ошибка при запросе, проверьте логи')
+
     else:
-        await message.answer(f'Было получен ответ JSON:\n{serialized_data}')
+        await message.answer(f'Было получен и сохранен в БД ответ JSON:\n{saved_data}')
 
     # Очищаем состояние
     await state.clear()

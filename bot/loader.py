@@ -12,12 +12,19 @@ from config.config import (
     WEB_SERVER_HOST,
     WEB_SERVER_PORT,
     WEBHOOK_URL,
-    WEBHOOK_PATH
+    WEBHOOK_PATH,
+
+    BOT_COMMANDS
 )
 
 from handlers.default_handlers import default_router
 from handlers.custom_handlers import custom_router
 
+# БД
+from models.db import create_tables
+from middlewares.middlewares import DBMiddleware
+
+from injectable import load_injection_container
 
 # Создаем бота
 bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
@@ -50,7 +57,7 @@ async def clear_webhook(bot_instance: Bot) -> None:
 
     :param bot_instance: Текущий бот
     """
-    logging.info(f'Установлен путь для вебхука: {WEBHOOK_URL}{WEBHOOK_PATH}')
+    logging.info(f'Удален вебхук: {WEBHOOK_URL}{WEBHOOK_PATH}')
     try:
         await bot_instance.delete_webhook(drop_pending_updates=True)
     except Exception as e:
@@ -60,8 +67,20 @@ async def clear_webhook(bot_instance: Bot) -> None:
 async def loader() -> web.AppRunner:
     """
     Сборка и настройка всех частей бота:
-    Веб-приложение и Вебхук для бота
+    Веб-приложение, Вебхук для бота, БД, команды.
     """
+
+    # Загрузка команд в бота
+    await bot.set_my_commands(BOT_COMMANDS)
+
+    # Загрузка контейнера для зависимостей
+    load_injection_container()
+
+    # Создаем таблицы БД если их нет
+    await create_tables()
+
+    # Регистрация middleware БД
+    dp.message.outer_middleware(DBMiddleware())
 
     # Инициализируем webhook
     await _set_webhook(bot_instance=bot)
