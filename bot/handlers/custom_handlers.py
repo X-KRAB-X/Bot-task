@@ -76,6 +76,7 @@ async def _get_api_data_and_save(message: Message, db, pydantic_model, resource:
 
 @custom_router.message(Command(commands=['get']), StateFilter(None))
 async def get_command_handler(message: Message, state: State):
+    logging.info('Вызываем обработчик `get_users_query_handler`')
 
     # Устанавливаем состояние
     await state.set_state(APIResponseStates.which_resource)
@@ -108,6 +109,8 @@ async def get_users_query_handler(callback: CallbackQuery, state: State):
 
 @custom_router.callback_query(APIResponseStates.which_resource, F.data == 'posts')
 async def get_posts_query_handler(callback: CallbackQuery, state: State):
+    logging.info('Вызываем обработчик `get_posts_query_handler`')
+
     # Сохраняем ответ
     await state.update_data(resource='posts', pydantic_model=PostModel)
     logging.info(f'Получено значение "posts". Состояние - WHICH_RESOURCE')
@@ -122,6 +125,8 @@ async def get_posts_query_handler(callback: CallbackQuery, state: State):
 
 @custom_router.callback_query(APIResponseStates.which_resource, F.data == 'comments')
 async def get_comments_query_handler(callback: CallbackQuery, state: State):
+    logging.info('Вызываем обработчик `get_comments_query_handler`')
+
     # Сохраняем ответ
     await state.update_data(resource='comments', pydantic_model=CommentModel)
     logging.info(f'Получено значение "comments". Состояние - WHICH_RESOURCE')
@@ -136,6 +141,8 @@ async def get_comments_query_handler(callback: CallbackQuery, state: State):
 
 @custom_router.callback_query(APIResponseStates.which_resource, F.data == 'albums')
 async def get_albums_query_handler(callback: CallbackQuery, state: State):
+    logging.info('Вызываем обработчик `get_albums_query_handler`')
+
     # Сохраняем ответ
     await state.update_data(resource='albums', pydantic_model=AlbumModel)
     logging.info(f'Получено значение "albums". Состояние - WHICH_RESOURCE')
@@ -150,6 +157,8 @@ async def get_albums_query_handler(callback: CallbackQuery, state: State):
 
 @custom_router.callback_query(APIResponseStates.which_resource, F.data == 'photos')
 async def get_photos_query_handler(callback: CallbackQuery, state: State):
+    logging.info('Вызываем обработчик `get_photos_query_handler`')
+
     # Сохраняем ответ
     await state.update_data(resource='photos', pydantic_model=PhotoModel)
     logging.info(f'Получено значение "photos". Состояние - WHICH_RESOURCE')
@@ -164,6 +173,8 @@ async def get_photos_query_handler(callback: CallbackQuery, state: State):
 
 @custom_router.callback_query(APIResponseStates.which_resource, F.data == 'todos')
 async def get_todos_query_handler(callback: CallbackQuery, state: State):
+    logging.info('Вызываем обработчик `get_todos_query_handler`')
+
     # Сохраняем ответ
     await state.update_data(resource='todos', pydantic_model=TodoModel)
     logging.info(f'Получено значение "todos". Состояние - WHICH_RESOURCE')
@@ -181,6 +192,8 @@ async def get_todos_query_handler(callback: CallbackQuery, state: State):
     F.data == 'cancel'
 )
 async def get_cancel_operation_handler(callback: CallbackQuery, state: State):
+    logging.info('Вызываем обработчик `get_cancel_operation_handler`')
+
     """
     Обработчик на случай, если пользователь захочет отменить команду.
     """
