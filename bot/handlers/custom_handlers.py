@@ -94,9 +94,9 @@ async def get_command_handler(message: Message, state: State):
 
 @custom_router.callback_query.register(StateFilter(APIResponseStates.which_resource), F.data == 'users')
 async def get_users_query_handler(callback: CallbackQuery, state: FSMContext):
+    await callback.answer('Выбран путь "/users".')
     logging.info('Вызываем обработчик `get_users_query_handler`')
 
-    await callback.answer('Выбран путь "/users".')
 
     # Сохраняем ответ
     await state.update_data(resource='users', pydantic_model=UserModel)
@@ -112,9 +112,9 @@ async def get_users_query_handler(callback: CallbackQuery, state: FSMContext):
 
 @custom_router.callback_query.register(StateFilter(APIResponseStates.which_resource), F.data == 'posts')
 async def get_posts_query_handler(callback: CallbackQuery, state: FSMContext):
+    await callback.answer('Выбран путь "/posts".')
     logging.info('Вызываем обработчик `get_posts_query_handler`')
 
-    await callback.answer('Выбран путь "/posts".')
 
     # Сохраняем ответ
     await state.update_data(resource='posts', pydantic_model=PostModel)
@@ -130,9 +130,9 @@ async def get_posts_query_handler(callback: CallbackQuery, state: FSMContext):
 
 @custom_router.callback_query.register(StateFilter(APIResponseStates.which_resource), F.data == 'comments')
 async def get_comments_query_handler(callback: CallbackQuery, state: FSMContext):
+    await callback.answer()
     logging.info('Вызываем обработчик `get_comments_query_handler`')
 
-    await callback.answer()
 
     # Сохраняем ответ
     await state.update_data(resource='comments', pydantic_model=CommentModel)
@@ -146,11 +146,10 @@ async def get_comments_query_handler(callback: CallbackQuery, state: FSMContext)
     )
 
 
-@custom_router.callback_query(StateFilter(APIResponseStates.which_resource), F.data == 'albums')
+@custom_router.callback_query.register(StateFilter(APIResponseStates.which_resource), F.data == 'albums')
 async def get_albums_query_handler(callback: CallbackQuery, state: FSMContext):
-    logging.info('Вызываем обработчик `get_albums_query_handler`')
-
     await callback.answer()
+    logging.info('Вызываем обработчик `get_albums_query_handler`')
 
     # Сохраняем ответ
     await state.update_data(resource='albums', pydantic_model=AlbumModel)
@@ -164,11 +163,11 @@ async def get_albums_query_handler(callback: CallbackQuery, state: FSMContext):
     )
 
 
-@custom_router.callback_query(StateFilter(APIResponseStates.which_resource), F.data == 'photos')
+@custom_router.callback_query.register(StateFilter(APIResponseStates.which_resource), F.data == 'photos')
 async def get_photos_query_handler(callback: CallbackQuery, state: FSMContext):
+    await callback.answer()
     logging.info('Вызываем обработчик `get_photos_query_handler`')
 
-    await callback.answer()
 
     # Сохраняем ответ
     await state.update_data(resource='photos', pydantic_model=PhotoModel)
@@ -182,11 +181,11 @@ async def get_photos_query_handler(callback: CallbackQuery, state: FSMContext):
     )
 
 
-@custom_router.callback_query(StateFilter(APIResponseStates.which_resource), F.data == 'todos')
+@custom_router.callback_query.register(StateFilter(APIResponseStates.which_resource), F.data == 'todos')
 async def get_todos_query_handler(callback: CallbackQuery, state: FSMContext):
+    await callback.answer()
     logging.info('Вызываем обработчик `get_todos_query_handler`')
 
-    await callback.answer()
 
     # Сохраняем ответ
     await state.update_data(resource='todos', pydantic_model=TodoModel)
@@ -200,25 +199,25 @@ async def get_todos_query_handler(callback: CallbackQuery, state: FSMContext):
     )
 
 
-@custom_router.callback_query.register(
-    StateFilter(APIResponseStates.which_resource, APIResponseStates.which_id),
-    F.data == 'cancel'
-)
-async def get_cancel_operation_handler(callback: CallbackQuery, state: FSMContext):
-    """
-    Обработчик на случай, если пользователь захочет отменить команду.
-    """
-
-    logging.info('Вызываем обработчик `get_cancel_operation_handler`')
-
-    await callback.answer()
-
-    await callback.message.answer('Отменяю..')
-
-    # Очищаем состояние
-    await state.clear()
-
-    await callback.answer('Готово. Вы можете вызвать мои команды вновь(см. /help)')
+# @custom_router.callback_query.register(
+#     StateFilter(APIResponseStates.which_resource, APIResponseStates.which_id),
+#     F.data == 'cancel'
+# )
+# async def get_cancel_operation_handler(callback: CallbackQuery, state: FSMContext):
+#     """
+#     Обработчик на случай, если пользователь захочет отменить команду.
+#     """
+#
+#     logging.info('Вызываем обработчик `get_cancel_operation_handler`')
+#
+#     await callback.answer()
+#
+#     await callback.message.answer('Отменяю..')
+#
+#     # Очищаем состояние
+#     await state.clear()
+#
+#     await callback.answer('Готово. Вы можете вызвать мои команды вновь(см. /help)')
 
 # -- Конец блока Callback Query --
 
