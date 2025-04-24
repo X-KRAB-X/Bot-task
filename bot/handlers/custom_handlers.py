@@ -78,12 +78,11 @@ async def _get_api_data_and_save(message: Message, db, pydantic_model, resource:
 async def get_command_handler(message: Message, state: State):
     logging.info('Вызываем обработчик `get_users_query_handler`')
 
+    await message.answer(f'Отправляем запрос по URL {API_URL}\nКакой путь?', reply_markup=api_get_keyboard)
+
     # Устанавливаем состояние
     await state.set_state(APIResponseStates.which_resource)
     logging.info('Установлено состояние - WHICH_RESOURCE')
-
-    await message.answer(f'Отправляем запрос по URL {API_URL}\nКакой путь?', reply_markup=api_get_keyboard)
-
 
 # -- Блок Callback Query хендлеров --
 
