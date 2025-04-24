@@ -15,14 +15,48 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import SQLAlchemyError
 
-from models.db import engine, PostDBModel
-from models.pydantic_api import PostModel, PostModelFromDB
+# SQLAlchemy
+from models.db import (
+    engine,
+
+    UserDBModel,
+    PostDBModel,
+    UserDBModel,
+    CommentDBModel,
+    AlbumDBModel,
+    PhotoDBModel,
+    TodoDBModel
+)
+
+# Pydantic
+from models.pydantic_api import (
+    UserModel,
+    AddressDBModel,
+    GeoDBModel,
+    CompanyDBModel,
+    UserModelFromDB,
+
+    PostModel,
+    PostModelFromDB,
+
+    CommentModel,
+    CommentModelFromDB,
+
+    AlbumModel,
+    AlbumModelFromDB,
+
+    PhotoModel,
+    PhotoModelFromDB,
+
+    TodoModel,
+    TodoModelFromDB
+)
 
 
 @injectable
 class DBAsyncSessionManager:
     """
-    Сервисный класс.
+    Класс для зависимостей.
     Инициализирует и возвращает асинхронную сессию.
     """
 
@@ -37,7 +71,6 @@ class DBAsyncSessionManager:
     async def session(self):
         """
         Контекстный менеджер сессии.
-        Представляет собой функцию-генератор.
         Возвращает сессию и ловит ошибки, после чего закрывает соединение.
         """
 
@@ -51,14 +84,12 @@ class DBAsyncSessionManager:
             finally:
                 await session.close()
 
-# TODO Сделать общий класс для настройки
-
 
 @injectable
 class _ServiceBase:
     """
     Базовый класс сервисов.
-    Создает менеджера сессии
+    Инициализирует менеджера сессии
     """
 
     @autowired
@@ -67,10 +98,51 @@ class _ServiceBase:
 
 
 @injectable
+class _Users(_ServiceBase):
+    """
+    Сервисный класс для работы с пользователями.
+    Реализует метод create_user, который отвечает за сохранение в БД юзера и ID тг-пользователя.
+    """
+
+    async def create_user(self, user_pydantic: UserModel, telegram_user_id):
+        async with self.db_session_manager.session() as db:
+            try:
+
+                # Получаем данные из связанных Pydantic-моделей
+                user_address_geo_api_data = user_pydantic.address.geo.model_dump()
+                user_address_api_data = user_pydantic.address.model_dump()
+                user_company_api_data = user_pydantic.company.model_dump()
+                user_api_data = user_pydantic.model_dump()
+
+                # Создаем объекты моделей
+                user_address_geo_db = GeoDBModel(**user_address_geo_api_data)
+                user_address_db = AddressDBModel(**user_address_api_data, geo=user_address_geo_db)
+                user_company_db = CompanyDBModel(**user_company_api_data)
+                user_db = UserDBModel(**user_api_data, address=user_address_db, company=user_company_db)
+
+                # Отдельно добавляем Telegram ID
+                user_db.telegram_user_id = telegram_user_id
+
+                db.add(user_db)
+
+                # Обновляем объект и получаем поля из БД
+                await db.flush()
+                await db.refresh(user_db)
+
+                # Возвращаем сериализованный JSON объект
+                user_validated = UserModelFromDB.model_validate(user_db)
+                return user_validated.model_dump_json()
+
+            except SQLAlchemyError as e:
+                logging.error(f'Ошибка при сохранении пользователя:\n{e}')
+                raise
+
+
+@injectable
 class _Posts(_ServiceBase):
     """
     Сервисный класс для работы с постами.
-    Реализует метод create, который отвечает за сохранение в БД поста и ID тг-пользователя.
+    Реализует метод create_post, который отвечает за сохранение в БД поста и ID тг-пользователя.
     """
 
     # async def get_post(self, post_id):
@@ -100,6 +172,7 @@ class _Posts(_ServiceBase):
     async def create_post(self, post_pydantic: PostModel, telegram_user_id) -> str:
         """
         Метод получает модель Pydantic, сохраняет запись в БД и возвращает новую Pydantic модель
+
         :param post_pydantic: Проверенные данные Pydantic.
         :param telegram_user_id: ID пользователя, который отправил сообщение боту.
 
@@ -132,7 +205,140 @@ class _Posts(_ServiceBase):
 
 
 @injectable
-class ServiceDB(_Posts):
+class _Comments(_ServiceBase):
+    """
+    Сервисный класс для работы с комментариями.
+    Реализует метод create_comment, который отвечает за сохранение в БД комментария и ID тг-пользователя.
+    """
+
+    async def create_comment(self, comment_pydantic: CommentModel, telegram_user_id):
+        async with self.db_session_manager.session() as db:
+            try:
+
+                # Создаем объект модели
+                comment_api_data = comment_pydantic.model_dump()
+                comment_db = PostDBModel(**comment_api_data)
+
+                # Отдельно добавляем Telegram ID
+                comment_db.telegram_user_id = telegram_user_id
+
+                db.add(comment_db)
+
+                # Обновляем объект и получаем поля из БД
+                await db.flush()
+                await db.refresh(comment_db)
+
+                # Возвращаем сериализованный JSON объект
+                comment_validated = CommentModelFromDB.model_validate(comment_db)
+                return comment_validated.model_dump_json()
+
+            except SQLAlchemyError as e:
+                logging.error(f'Ошибка при сохранении поста:\n{e}')
+                raise
+
+
+@injectable
+class _Albums(_ServiceBase):
+    """
+    Сервисный класс для работы с альбомами.
+    Реализует метод create_album, который отвечает за сохранение в БД альбома и ID тг-пользователя.
+    """
+
+    async def create_album(self, album_pydantic: AlbumModel, telegram_user_id):
+        async with self.db_session_manager.session() as db:
+            try:
+
+                # Создаем объект модели
+                album_api_data = album_pydantic.model_dump()
+                album_db = AlbumDBModel(**album_api_data)
+
+                # Отдельно добавляем Telegram ID
+                album_db.telegram_user_id = telegram_user_id
+
+                db.add(album_db)
+
+                # Обновляем объект и получаем поля из БД
+                await db.flush()
+                await db.refresh(album_db)
+
+                # Возвращаем сериализованный JSON объект
+                album_validated = AlbumModelFromDB.model_validate(album_db)
+                return album_validated.model_dump_json()
+
+            except SQLAlchemyError as e:
+                logging.error(f'Ошибка при сохранении поста:\n{e}')
+                raise
+
+
+
+@injectable
+class _Photos(_ServiceBase):
+    """
+    Сервисный класс для работы с фотографиями.
+    Реализует метод create_photo, который отвечает за сохранение в БД фото и ID тг-пользователя.
+    """
+
+    async def create_photo(self, photo_pydantic: PhotoModel, telegram_user_id):
+        async with self.db_session_manager.session() as db:
+            try:
+
+                # Создаем объект модели
+                photo_api_data = photo_pydantic.model_dump()
+                photo_db = PhotoDBModel(**photo_api_data)
+
+                # Отдельно добавляем Telegram ID
+                photo_db.telegram_user_id = telegram_user_id
+
+                db.add(photo_db)
+
+                # Обновляем объект и получаем поля из БД
+                await db.flush()
+                await db.refresh(photo_db)
+
+                # Возвращаем сериализованный JSON объект
+                photo_validated = PhotoModelFromDB.model_validate(photo_db)
+                return photo_validated.model_dump_json()
+
+            except SQLAlchemyError as e:
+                logging.error(f'Ошибка при сохранении поста:\n{e}')
+                raise
+
+
+@injectable
+class _Todos(_ServiceBase):
+    """
+    Сервисный класс для работы с заметками.
+    Реализует метод create_todo, который отвечает за сохранение в БД заметки и ID тг-пользователя.
+    """
+
+    async def create_todo(self, todo_pydantic: TodoModel, telegram_user_id):
+        async with self.db_session_manager.session() as db:
+            try:
+
+                # Создаем объект модели
+                todo_api_data = todo_pydantic.model_dump()
+                todo_db = TodoDBModel(**todo_api_data)
+
+                # Отдельно добавляем Telegram ID
+                todo_db.telegram_user_id = telegram_user_id
+
+                db.add(todo_db)
+
+                # Обновляем объект и получаем поля из БД
+                await db.flush()
+                await db.refresh(todo_db)
+
+                # Возвращаем сериализованный JSON объект
+                todo_validated = TodoModelFromDB.model_validate(todo_db)
+                return todo_validated.model_dump_json()
+
+            except SQLAlchemyError as e:
+                logging.error(f'Ошибка при сохранении поста:\n{e}')
+                raise
+
+
+@injectable
+class ServiceDB(_Users, _Posts, _Comments, _Albums, _Photos, _Todos):
     """
     Класс-сервис.
     Объединяет в себе методы для работы со всеми моделями БД, предоставляя единый интерфейс управления.

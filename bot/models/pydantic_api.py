@@ -3,7 +3,6 @@
 Данные взяты с https://jsonplaceholder.typicode.com/
 """
 
-# Todo Сделать валидацию для многих полей. Для телефона и email использовать regex
 from datetime import datetime
 
 from pydantic import BaseModel, validator, Field, ConfigDict
@@ -77,7 +76,7 @@ class PostModelFromDB(PostModel, _DBMixin):
     post_id: int = Field() # Лишаем поле alias='id' во избежание конфликтов
 
 
-class CommentsModel(BaseModel):
+class CommentModel(BaseModel):
     post_id: int
     comment_id: int = Field(alias='id')
     name: str
@@ -87,7 +86,7 @@ class CommentsModel(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-class CommentModelFromDB(CommentsModel, _DBMixin):
+class CommentModelFromDB(CommentModel, _DBMixin):
     comment_id: int = Field() # Лишаем поле alias='id' во избежание конфликтов
 
 

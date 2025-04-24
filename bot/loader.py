@@ -22,7 +22,7 @@ from handlers.custom_handlers import custom_router
 
 # БД
 from models.db import create_tables
-from middlewares.middlewares import InjectableMiddleware
+from middlewares.middlewares import DBMiddleware
 
 from injectable import load_injection_container
 
@@ -36,8 +36,6 @@ main_router.include_routers(custom_router, default_router)
 # Создаем диспетчера
 dp = Dispatcher()
 dp.include_router(main_router)
-
-
 
 
 async def _set_webhook(bot_instance: Bot) -> None:
@@ -59,7 +57,7 @@ async def clear_webhook(bot_instance: Bot) -> None:
 
     :param bot_instance: Текущий бот
     """
-    logging.info(f'Установлен путь для вебхука: {WEBHOOK_URL}{WEBHOOK_PATH}')
+    logging.info(f'Удален вебхук: {WEBHOOK_URL}{WEBHOOK_PATH}')
     try:
         await bot_instance.delete_webhook(drop_pending_updates=True)
     except Exception as e:
@@ -82,7 +80,7 @@ async def loader() -> web.AppRunner:
     await create_tables()
 
     # Регистрация middleware БД
-    dp.message.outer_middleware(InjectableMiddleware())
+    dp.message.outer_middleware(DBMiddleware())
 
     # Инициализируем webhook
     await _set_webhook(bot_instance=bot)

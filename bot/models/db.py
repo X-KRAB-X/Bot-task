@@ -41,14 +41,14 @@ class UserDBModel(BaseDBModel):
     phone: Mapped[str]
     website: Mapped[str]
 
-    address: Mapped['_AddressDBModel'] = relationship(back_populates='user')
-    company: Mapped['_CompanyDBModel'] = relationship(back_populates='user')
+    address: Mapped['AddressDBModel'] = relationship(back_populates='user')
+    company: Mapped['CompanyDBModel'] = relationship(back_populates='user')
 
     def __repr__(self):
         return f'User {self.user_id}'
 
 
-class _AddressDBModel(Base):
+class AddressDBModel(Base):
     """
     Данная модель не нацелена на отслеживание истории действий пользователя, поэтому не наследуется от `BaseDBModel`
     """
@@ -60,13 +60,13 @@ class _AddressDBModel(Base):
     suite: Mapped[str] = mapped_column(String)
     city: Mapped[str] = mapped_column(String)
     zipcode: Mapped[str] = mapped_column(String)
-    geo: Mapped['_GeoDBModel'] = relationship(back_populates='address')
+    geo: Mapped['GeoDBModel'] = relationship(back_populates='address')
 
     user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
     user: Mapped['UserDBModel'] = relationship(back_populates='address')
 
 
-class _GeoDBModel(Base):
+class GeoDBModel(Base):
     """
     Данная модель не нацелена на отслеживание истории действий пользователя, поэтому не наследуется от `BaseDBModel`
     """
@@ -78,10 +78,10 @@ class _GeoDBModel(Base):
     lng: Mapped[float] = mapped_column(Float)
 
     address_id: Mapped[int] = mapped_column(ForeignKey('addresses.id'))
-    address: Mapped['_AddressDBModel'] = relationship(back_populates='geo')
+    address: Mapped['AddressDBModel'] = relationship(back_populates='geo')
 
 
-class _CompanyDBModel(Base):
+class CompanyDBModel(Base):
     """
     Данная модель не нацелена на отслеживание истории действий пользователя, поэтому не наследуется от `BaseDBModel`
     """
@@ -156,9 +156,6 @@ class TodoDBModel(BaseDBModel):
 
     def __repr__(self):
         return f'Todo {self.todo_id}, user {self.user_id}'
-
-
-# Модели ---
 
 
 async def create_tables():
