@@ -92,7 +92,8 @@ async def get_command_handler(message: Message, state: State):
 # и сохраняются необходимые данные. После этого одинаковый переход в следующее состояние - 'which_id'.
 # Также предусмотрена кнопка отмены с отменой состояния.
 
-@custom_router.callback_query.register(StateFilter(APIResponseStates.which_resource), F.data == 'users')
+# @custom_router.callback_query.register(StateFilter(APIResponseStates.which_resource), F.data == 'users')
+@custom_router.callback_query.register(F.data == 'users')
 async def get_users_query_handler(callback: CallbackQuery, state: FSMContext):
     await callback.answer('Выбран путь "/users".')
     logging.info('Вызываем обработчик `get_users_query_handler`')
@@ -109,8 +110,8 @@ async def get_users_query_handler(callback: CallbackQuery, state: FSMContext):
         f'Какой id ресурса?\nВведите целое число от 1 до {available_resources["users"]}.'
     )
 
-
-@custom_router.callback_query.register(StateFilter(APIResponseStates.which_resource), F.data == 'posts')
+# @custom_router.callback_query.register(StateFilter(APIResponseStates.which_resource), F.data == 'posts')
+@custom_router.callback_query.register(F.data == 'posts')
 async def get_posts_query_handler(callback: CallbackQuery, state: FSMContext):
     await callback.answer('Выбран путь "/posts".')
     logging.info('Вызываем обработчик `get_posts_query_handler`')
