@@ -20,6 +20,9 @@ from models.db import (
     engine,
 
     UserDBModel,
+    AddressDBModel,
+    GeoDBModel,
+    CompanyDBModel,
     PostDBModel,
     UserDBModel,
     CommentDBModel,
@@ -31,9 +34,6 @@ from models.db import (
 # Pydantic
 from models.pydantic_api import (
     UserModel,
-    AddressDBModel,
-    GeoDBModel,
-    CompanyDBModel,
     UserModelFromDB,
 
     PostModel,
