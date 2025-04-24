@@ -74,7 +74,7 @@ async def _get_api_data_and_save(message: Message, db, pydantic_model, resource:
     return await db.create_obj(validated_data, message.from_user.id, resource=resource)
 
 
-@custom_router.message.register(Command(commands=['get']), StateFilter(None))
+@custom_router.message(Command(commands=['get']), StateFilter(None))
 async def get_command_handler(message: Message, state: State):
 
     # Устанавливаем состояние
