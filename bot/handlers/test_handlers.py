@@ -19,7 +19,7 @@ async def test_command_handler(message: Message):
 
 @test_router.callback_query(F.data == 'testing')
 async def test_callback_handler(callback: CallbackQuery):
-    await callback.answer()
+    await callback.answer('Нажато!')
     logging.info('Вошел в функцию test_callback_handler')
     await callback.message.answer('Тестовое сообщение, запрос сработал')
 
@@ -27,4 +27,4 @@ async def test_callback_handler(callback: CallbackQuery):
 @test_router.callback_query()
 async def all_callback_handler(callback: CallbackQuery):
     logging.info(f'Получен коллбэк с данными {callback.data}')
-    await callback.answer()
+    await callback.answer('Нажато!')
