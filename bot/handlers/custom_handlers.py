@@ -78,7 +78,7 @@ async def _get_api_data_and_save(message: Message, db, pydantic_model, resource:
 
 
 
-@custom_router.message(Command(commands=['/test']))
+@custom_router.message(Command(commands=['test']))
 async def test_command_handler(message: Message):
     logging.info('Вошел в функцию test_command_handler')
     await message.answer('Вот тебе клавиатура', reply_markup=test_keyboard)
