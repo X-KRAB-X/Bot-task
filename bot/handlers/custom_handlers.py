@@ -84,7 +84,7 @@ async def test_command_handler(message: Message):
     await message.answer('Вот тебе клавиатура', reply_markup=test_keyboard)
 
 
-@custom_router.callback_query(F.data == 'testing')
+@custom_router.callback_query.register(F.data == 'testing')
 async def test_callback_handler(callback: CallbackQuery):
     await callback.answer()
     logging.info('Вошел в функцию test_callback_handler')
