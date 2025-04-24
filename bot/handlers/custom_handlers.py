@@ -91,7 +91,10 @@ async def test_callback_handler(callback: CallbackQuery):
     await callback.message.answer('Тестовое сообщение, запрос сработал')
 
 
-
+@custom_router.callback_query()
+async def all_callback_handler(callback: CallbackQuery):
+    logging.info(f'Получен коллбэк с данными {callback.data}')
+    await callback.answer()
 
 
 
