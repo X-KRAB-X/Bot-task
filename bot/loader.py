@@ -33,7 +33,9 @@ bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTM
 
 # Создаем главный роутер
 main_router = Router()
-main_router.include_routers(custom_router, default_router)
+
+main_router.include_router(custom_router)
+main_router.include_router(default_router)
 
 # Создаем диспетчера
 dp = Dispatcher()
