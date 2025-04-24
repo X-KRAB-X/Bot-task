@@ -24,6 +24,7 @@ async def delete_message_handler(message: Message):
     Реагирует на бессмысленные сообщения вне состояний, либо когда этого не ожидается.
     """
 
+    logging.info(f'Активировалось `delete_message_handler`')
     try:
         await message.delete()
     except Exception as e:
