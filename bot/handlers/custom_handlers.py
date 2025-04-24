@@ -76,7 +76,7 @@ async def _get_api_data_and_save(message: Message, db, pydantic_model, resource:
 
 @custom_router.message(Command(commands=['get']), StateFilter(None))
 async def get_command_handler(message: Message, state: State):
-    logging.info('Вызываем обработчик `get_users_query_handler`')
+    logging.info('Вызываем обработчик `/get`')
 
     await message.answer(f'Отправляем запрос по URL {API_URL}\nКакой путь?', reply_markup=api_get_keyboard)
 
