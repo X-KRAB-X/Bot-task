@@ -17,14 +17,14 @@ async def test_command_handler(message: Message):
     await message.answer('Вот тебе клавиатура', reply_markup=test_keyboard)
 
 
-@test_router.callback_query(F.data == 'testing')
+@test_router.callback_query_handler(F.data == 'testing')
 async def test_callback_handler(callback: CallbackQuery):
     await callback.answer()
     logging.info('Вошел в функцию test_callback_handler')
     await callback.message.answer('Тестовое сообщение, запрос сработал')
 
 
-@test_router.callback_query()
+@test_router.callback_query_handler()
 async def all_callback_handler(callback: CallbackQuery):
     logging.info(f'Получен коллбэк с данными {callback.data}')
     await callback.answer()
