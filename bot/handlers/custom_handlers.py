@@ -76,29 +76,6 @@ async def _get_api_data_and_save(message: Message, db, pydantic_model, resource:
     return await db.create_obj(validated_data, message.from_user.id, resource=resource)
 
 
-
-
-@custom_router.message(Command(commands=['test']))
-async def test_command_handler(message: Message):
-    logging.info('Вошел в функцию test_command_handler')
-    await message.answer('Вот тебе клавиатура', reply_markup=test_keyboard)
-
-
-@custom_router.callback_query(F.data == 'testing')
-async def test_callback_handler(callback: CallbackQuery):
-    await callback.answer()
-    logging.info('Вошел в функцию test_callback_handler')
-    await callback.message.answer('Тестовое сообщение, запрос сработал')
-
-
-@custom_router.callback_query()
-async def all_callback_handler(callback: CallbackQuery):
-    logging.info(f'Получен коллбэк с данными {callback.data}')
-    await callback.answer()
-
-
-
-
 @custom_router.message(Command(commands=['get']), StateFilter(None))
 async def get_command_handler(message: Message, state: State):
     logging.info('Вызываем обработчик `/get`')

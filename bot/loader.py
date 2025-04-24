@@ -19,6 +19,7 @@ from config.config import (
 
 from handlers.default_handlers import default_router
 from handlers.custom_handlers import custom_router
+from handlers.test_handlers import test_router
 
 # БД
 from models.db import create_tables
@@ -34,8 +35,10 @@ bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTM
 # Создаем главный роутер
 main_router = Router()
 
-main_router.include_router(custom_router)
-main_router.include_router(default_router)
+# main_router.include_router(custom_router)
+# main_router.include_router(default_router)
+main_router.include_router(test_router)
+
 
 # Создаем диспетчера
 dp = Dispatcher()
