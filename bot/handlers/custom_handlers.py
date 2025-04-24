@@ -92,7 +92,7 @@ async def get_command_handler(message: Message, state: State):
 # и сохраняются необходимые данные. После этого одинаковый переход в следующее состояние - 'which_id'.
 # Также предусмотрена кнопка отмены с отменой состояния.
 
-@custom_router.callback_query.register(F.data == 'users', StateFilter(APIResponseStates.which_resource))
+@custom_router.callback_query.register(StateFilter(APIResponseStates.which_resource), F.data == 'users')
 async def get_users_query_handler(callback: CallbackQuery, state: FSMContext):
     logging.info('Вызываем обработчик `get_users_query_handler`')
 
