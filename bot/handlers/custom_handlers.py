@@ -98,13 +98,13 @@ async def get_users_query_handler(callback: CallbackQuery, state: FSMContext):
     await callback.answer('Выбран путь "/users".')
     logging.info('Вызываем обработчик `get_users_query_handler`')
 
-
-    # Сохраняем ответ
-    await state.update_data(resource='users', pydantic_model=UserModel)
-    logging.info(f'Получено значение "users". Состояние - WHICH_RESOURCE')
-
-    # Устанавливаем след. состояние
-    await state.set_state(APIResponseStates.which_id)
+    #
+    # # Сохраняем ответ
+    # await state.update_data(resource='users', pydantic_model=UserModel)
+    # logging.info(f'Получено значение "users". Состояние - WHICH_RESOURCE')
+    #
+    # # Устанавливаем след. состояние
+    # await state.set_state(APIResponseStates.which_id)
 
     await callback.message.answer(
         f'Какой id ресурса?\nВведите целое число от 1 до {available_resources["users"]}.'
