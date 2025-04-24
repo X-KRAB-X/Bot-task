@@ -92,6 +92,8 @@ async def get_command_handler(message: Message, state: State):
 
 @custom_router.callback_query(APIResponseStates.which_resource, F.data == 'users')
 async def get_users_query_handler(callback: CallbackQuery, state: State):
+    logging.info('Вызываем обработчик `get_users_query_handler`')
+
     # Сохраняем ответ
     await state.update_data(resource='users', pydantic_model=UserModel)
     logging.info(f'Получено значение "users". Состояние - WHICH_RESOURCE')
