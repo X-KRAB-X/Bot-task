@@ -1,6 +1,6 @@
 import logging
 
-from aiogram import Router
+from aiogram import Router, Bot
 from aiogram.filters import Command, StateFilter
 from aiogram.types import Message
 
@@ -8,12 +8,12 @@ default_router = Router(name='default_router')
 
 
 @default_router.message.register(Command(commands=['start']), StateFilter(None))
-async def start_handler(message: Message, bot):
+async def start_handler(message: Message, bot: Bot):
     await message.answer(text='Привет тебе!', parse_mode=None)
 
 
 @default_router.message.register(Command(commands=['help']), StateFilter(None))
-async def help_handler(message: Message, bot):
+async def help_handler(message: Message, bot: Bot):
     await message.answer(text='Я нахожу в разработке, умею только здороваться.', parse_mode=None)
 
 
