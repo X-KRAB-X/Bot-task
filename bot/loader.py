@@ -26,6 +26,8 @@ from middlewares.middlewares import DBMiddleware
 
 from injectable import load_injection_container
 
+logging.basicConfig(level='DEBUG')
+
 # Создаем бота
 bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 
