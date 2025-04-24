@@ -95,6 +95,8 @@ async def get_command_handler(message: Message, state: State):
 async def get_users_query_handler(callback: CallbackQuery, state: State):
     logging.info('Вызываем обработчик `get_users_query_handler`')
 
+    await callback.answer()
+
     # Сохраняем ответ
     await state.update_data(resource='users', pydantic_model=UserModel)
     logging.info(f'Получено значение "users". Состояние - WHICH_RESOURCE')
@@ -102,7 +104,7 @@ async def get_users_query_handler(callback: CallbackQuery, state: State):
     # Устанавливаем след. состояние
     await state.set_state(APIResponseStates.which_id)
 
-    await callback.answer(
+    await callback.message.answer(
         f'Выбран путь "/users". Какой id ресурса?\nВведите целое число от 1 до {available_resources["users"]}.'
     )
 
@@ -111,6 +113,8 @@ async def get_users_query_handler(callback: CallbackQuery, state: State):
 async def get_posts_query_handler(callback: CallbackQuery, state: State):
     logging.info('Вызываем обработчик `get_posts_query_handler`')
 
+    await callback.answer()
+
     # Сохраняем ответ
     await state.update_data(resource='posts', pydantic_model=PostModel)
     logging.info(f'Получено значение "posts". Состояние - WHICH_RESOURCE')
@@ -118,7 +122,7 @@ async def get_posts_query_handler(callback: CallbackQuery, state: State):
     # Устанавливаем след. состояние
     await state.set_state(APIResponseStates.which_id)
 
-    await callback.answer(
+    await callback.message.answer(
         f'Выбран путь "/posts". Какой id ресурса?\nВведите целое число от 1 до {available_resources["posts"]}.'
     )
 
@@ -127,6 +131,8 @@ async def get_posts_query_handler(callback: CallbackQuery, state: State):
 async def get_comments_query_handler(callback: CallbackQuery, state: State):
     logging.info('Вызываем обработчик `get_comments_query_handler`')
 
+    await callback.answer()
+
     # Сохраняем ответ
     await state.update_data(resource='comments', pydantic_model=CommentModel)
     logging.info(f'Получено значение "comments". Состояние - WHICH_RESOURCE')
@@ -134,7 +140,7 @@ async def get_comments_query_handler(callback: CallbackQuery, state: State):
     # Устанавливаем след. состояние
     await state.set_state(APIResponseStates.which_id)
 
-    await callback.answer(
+    await callback.message.answer(
         f'Выбран путь "/comments". Какой id ресурса?\nВведите целое число от 1 до {available_resources["comments"]}.'
     )
 
@@ -143,6 +149,8 @@ async def get_comments_query_handler(callback: CallbackQuery, state: State):
 async def get_albums_query_handler(callback: CallbackQuery, state: State):
     logging.info('Вызываем обработчик `get_albums_query_handler`')
 
+    await callback.answer()
+
     # Сохраняем ответ
     await state.update_data(resource='albums', pydantic_model=AlbumModel)
     logging.info(f'Получено значение "albums". Состояние - WHICH_RESOURCE')
@@ -150,7 +158,7 @@ async def get_albums_query_handler(callback: CallbackQuery, state: State):
     # Устанавливаем след. состояние
     await state.set_state(APIResponseStates.which_id)
 
-    await callback.answer(
+    await callback.message.answer(
         f'Выбран путь "/albums". Какой id ресурса?\nВведите целое число от 1 до {available_resources["albums"]}.'
     )
 
@@ -159,6 +167,8 @@ async def get_albums_query_handler(callback: CallbackQuery, state: State):
 async def get_photos_query_handler(callback: CallbackQuery, state: State):
     logging.info('Вызываем обработчик `get_photos_query_handler`')
 
+    await callback.answer()
+
     # Сохраняем ответ
     await state.update_data(resource='photos', pydantic_model=PhotoModel)
     logging.info(f'Получено значение "photos". Состояние - WHICH_RESOURCE')
@@ -166,7 +176,7 @@ async def get_photos_query_handler(callback: CallbackQuery, state: State):
     # Устанавливаем след. состояние
     await state.set_state(APIResponseStates.which_id)
 
-    await callback.answer(
+    await callback.message.answer(
         f'Выбран путь "/photos". Какой id ресурса?\nВведите целое число от 1 до {available_resources["photos"]}.'
     )
 
@@ -175,6 +185,8 @@ async def get_photos_query_handler(callback: CallbackQuery, state: State):
 async def get_todos_query_handler(callback: CallbackQuery, state: State):
     logging.info('Вызываем обработчик `get_todos_query_handler`')
 
+    await callback.answer()
+
     # Сохраняем ответ
     await state.update_data(resource='todos', pydantic_model=TodoModel)
     logging.info(f'Получено значение "todos". Состояние - WHICH_RESOURCE')
@@ -182,7 +194,7 @@ async def get_todos_query_handler(callback: CallbackQuery, state: State):
     # Устанавливаем след. состояние
     await state.set_state(APIResponseStates.which_id)
 
-    await callback.answer(
+    await callback.message.answer(
         f'Выбран путь "/todos". Какой id ресурса?\nВведите целое число от 1 до {available_resources["todos"]}.'
     )
 
@@ -192,13 +204,15 @@ async def get_todos_query_handler(callback: CallbackQuery, state: State):
     F.data == 'cancel'
 )
 async def get_cancel_operation_handler(callback: CallbackQuery, state: State):
-    logging.info('Вызываем обработчик `get_cancel_operation_handler`')
-
     """
     Обработчик на случай, если пользователь захочет отменить команду.
     """
 
-    await callback.answer('Отменяю..')
+    logging.info('Вызываем обработчик `get_cancel_operation_handler`')
+
+    await callback.answer()
+
+    await callback.message.answer('Отменяю..')
 
     # Очищаем состояние
     await state.clear()
