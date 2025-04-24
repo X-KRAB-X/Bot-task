@@ -8,6 +8,8 @@ photos_button = InlineKeyboardButton(text='🌄 Фотографии', callback_
 todos_button = InlineKeyboardButton(text='📌 Заметки', callback_data='todos')
 cancel_button = InlineKeyboardButton(text='❌ Отмена', callback_data='cancel')
 
+test_button = InlineKeyboardButton(text='Проверочный коллбэк', callback_data='testing')
+
 api_get_keyboard = InlineKeyboardMarkup(inline_keyboard=[
     [users_button, todos_button],
     [posts_button, comments_button],
@@ -17,4 +19,8 @@ api_get_keyboard = InlineKeyboardMarkup(inline_keyboard=[
 
 only_cancel_keyboard = InlineKeyboardMarkup(inline_keyboard=[
     [cancel_button]
+])
+
+test_keyboard = InlineKeyboardMarkup(inline_keyboard=[
+    [test_button]
 ])

@@ -12,7 +12,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from api.api import get_json_response
 from config.config import API_URL
 from states.states import APIResponseStates
-from keyboard.api_get_keyboard import api_get_keyboard, only_cancel_keyboard
+from keyboard.api_get_keyboard import api_get_keyboard, only_cancel_keyboard, test_keyboard
 
 # Pydantic
 from models.pydantic_api import (
@@ -76,6 +76,24 @@ async def _get_api_data_and_save(message: Message, db, pydantic_model, resource:
     return await db.create_obj(validated_data, message.from_user.id, resource=resource)
 
 
+
+
+@custom_router.message(Command(commands=['/test']))
+async def test_command_handler(message: Message):
+    await message.answer('Вот тебе клавиатура', reply_markup=test_keyboard)
+
+
+@custom_router.callback_query(F.data == 'testing')
+async def test_callback_handler(callback: CallbackQuery):
+    await callback.answer()
+    await callback.message.answer('Тестовое сообщение, запрос сработал')
+
+
+
+
+
+
+
 @custom_router.message(Command(commands=['get']), StateFilter(None))
 async def get_command_handler(message: Message, state: State):
     logging.info('Вызываем обработчик `/get`')
@@ -92,25 +110,24 @@ async def get_command_handler(message: Message, state: State):
 # и сохраняются необходимые данные. После этого одинаковый переход в следующее состояние - 'which_id'.
 # Также предусмотрена кнопка отмены с отменой состояния.
 
-# @custom_router.callback_query.register(StateFilter(APIResponseStates.which_resource), F.data == 'users')
-@custom_router.callback_query(F.data == 'users')
+@custom_router.callback_query.register(StateFilter(APIResponseStates.which_resource), F.data == 'users')
 async def get_users_query_handler(callback: CallbackQuery, state: FSMContext):
     await callback.answer('Выбран путь "/users".')
     logging.info('Вызываем обработчик `get_users_query_handler`')
 
-    #
-    # # Сохраняем ответ
-    # await state.update_data(resource='users', pydantic_model=UserModel)
-    # logging.info(f'Получено значение "users". Состояние - WHICH_RESOURCE')
-    #
-    # # Устанавливаем след. состояние
-    # await state.set_state(APIResponseStates.which_id)
+
+    # Сохраняем ответ
+    await state.update_data(resource='users', pydantic_model=UserModel)
+    logging.info(f'Получено значение "users". Состояние - WHICH_RESOURCE')
+
+    # Устанавливаем след. состояние
+    await state.set_state(APIResponseStates.which_id)
 
     await callback.message.answer(
         f'Какой id ресурса?\nВведите целое число от 1 до {available_resources["users"]}.'
     )
 
-# @custom_router.callback_query.register(StateFilter(APIResponseStates.which_resource), F.data == 'posts')
+@custom_router.callback_query.register(StateFilter(APIResponseStates.which_resource), F.data == 'posts')
 @custom_router.callback_query(F.data == 'posts')
 async def get_posts_query_handler(callback: CallbackQuery, state: FSMContext):
     await callback.answer('Выбран путь "/posts".')
