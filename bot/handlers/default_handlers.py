@@ -7,7 +7,7 @@ from aiogram.types import Message
 default_router = Router(name='default_router')
 
 
-@default_router.message.register(Command(commands=['start']), StateFilter(None))
+@default_router.message(Command(commands=['start']), StateFilter(None))
 async def start_handler(message: Message):
     await message.answer(text='Привет тебе!', parse_mode=None)
 
