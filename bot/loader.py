@@ -52,7 +52,7 @@ async def _set_webhook(bot_instance: Bot) -> None:
     :param bot_instance: Текущий бот
     """
     try:
-        await bot_instance.set_webhook(f'{WEBHOOK_URL}{WEBHOOK_PATH}', allowed_updates=True)
+        await bot_instance.set_webhook(f'{WEBHOOK_URL}{WEBHOOK_PATH}', allowed_updates=["message", "callback_query"])
         logging.info(f'Установлен путь для вебхука: {WEBHOOK_URL}{WEBHOOK_PATH}')
     except Exception as e:
         logging.error(f'Произошла ошибка при установке вебхука:\n{e}')
