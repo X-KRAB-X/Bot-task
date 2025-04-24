@@ -236,7 +236,7 @@ async def get_response_data_handler(message: Message, state: State, db):
         try:
 
             # Передаем данные в функцию для запроса к API и сохранения в БД.
-            data_db = _get_api_data_and_save(
+            data_db = await _get_api_data_and_save(
                 message=message,
                 db=db,
                 pydantic_model=data['pydantic_model'],
