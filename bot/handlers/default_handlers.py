@@ -17,15 +17,15 @@ async def help_handler(message: Message, bot: Bot):
     await message.answer(text='Я нахожу в разработке, умею только здороваться.', parse_mode=None)
 
 
-# @default_router.message(StateFilter(None))
-# async def delete_message_handler(message: Message):
-#     """
-#     Удаляет сообщение пользователя.
-#     Реагирует на бессмысленные сообщения вне состояний, либо когда этого не ожидается.
-#     """
-#
-#     logging.info(f'Активировалось `delete_message_handler`')
-#     try:
-#         await message.delete()
-#     except Exception as e:
-#         logging.error(f'Ошибка при удалении сообщения:\n{e}')
+@default_router.message(StateFilter(None))
+async def delete_message_handler(message: Message):
+    """
+    Удаляет сообщение пользователя.
+    Реагирует на бессмысленные сообщения вне состояний, либо когда этого не ожидается.
+    """
+
+    logging.info(f'Активировалось `delete_message_handler`')
+    try:
+        await message.delete()
+    except Exception as e:
+        logging.error(f'Ошибка при удалении сообщения:\n{e}')

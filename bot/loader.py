@@ -35,9 +35,9 @@ bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTM
 # Создаем главный роутер
 main_router = Router()
 
-# main_router.include_router(custom_router)
-# main_router.include_router(default_router)
-main_router.include_router(test_router)
+main_router.include_router(custom_router)
+main_router.include_router(default_router)
+# main_router.include_router(test_router)
 
 
 # Создаем диспетчера
@@ -52,7 +52,10 @@ async def _set_webhook(bot_instance: Bot) -> None:
     :param bot_instance: Текущий бот
     """
     try:
-        await bot_instance.set_webhook(f'{WEBHOOK_URL}{WEBHOOK_PATH}', allowed_updates=["message", "callback_query"])
+        await bot_instance.set_webhook(
+            f'{WEBHOOK_URL}{WEBHOOK_PATH}',
+            allowed_updates=["message", "callback_query"] # Очень важно, чтобы тг мог отправлять callback_query
+        )
         logging.info(f'Установлен путь для вебхука: {WEBHOOK_URL}{WEBHOOK_PATH}')
     except Exception as e:
         logging.error(f'Произошла ошибка при установке вебхука:\n{e}')

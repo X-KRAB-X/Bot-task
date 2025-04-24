@@ -92,7 +92,7 @@ async def get_command_handler(message: Message, state: State):
 # и сохраняются необходимые данные. После этого одинаковый переход в следующее состояние - 'which_id'.
 # Также предусмотрена кнопка отмены с отменой состояния.
 
-@custom_router.callback_query.register(StateFilter(APIResponseStates.which_resource), F.data == 'users')
+@custom_router.callback_query(APIResponseStates.which_resource, F.data == 'users')
 async def get_users_query_handler(callback: CallbackQuery, state: FSMContext):
     await callback.answer('Выбран путь "/users".')
     logging.info('Вызываем обработчик `get_users_query_handler`')
@@ -109,8 +109,7 @@ async def get_users_query_handler(callback: CallbackQuery, state: FSMContext):
         f'Какой id ресурса?\nВведите целое число от 1 до {available_resources["users"]}.'
     )
 
-@custom_router.callback_query.register(StateFilter(APIResponseStates.which_resource), F.data == 'posts')
-@custom_router.callback_query(F.data == 'posts')
+@custom_router.callback_query(APIResponseStates.which_resource, F.data == 'posts')
 async def get_posts_query_handler(callback: CallbackQuery, state: FSMContext):
     await callback.answer('Выбран путь "/posts".')
     logging.info('Вызываем обработчик `get_posts_query_handler`')
@@ -128,7 +127,7 @@ async def get_posts_query_handler(callback: CallbackQuery, state: FSMContext):
     )
 
 
-@custom_router.callback_query.register(StateFilter(APIResponseStates.which_resource), F.data == 'comments')
+@custom_router.callback_query(APIResponseStates.which_resource, F.data == 'comments')
 async def get_comments_query_handler(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
     logging.info('Вызываем обработчик `get_comments_query_handler`')
@@ -146,7 +145,7 @@ async def get_comments_query_handler(callback: CallbackQuery, state: FSMContext)
     )
 
 
-@custom_router.callback_query.register(StateFilter(APIResponseStates.which_resource), F.data == 'albums')
+@custom_router.callback_query(APIResponseStates.which_resource, F.data == 'albums')
 async def get_albums_query_handler(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
     logging.info('Вызываем обработчик `get_albums_query_handler`')
@@ -163,7 +162,7 @@ async def get_albums_query_handler(callback: CallbackQuery, state: FSMContext):
     )
 
 
-@custom_router.callback_query.register(StateFilter(APIResponseStates.which_resource), F.data == 'photos')
+@custom_router.callback_query(APIResponseStates.which_resource, F.data == 'photos')
 async def get_photos_query_handler(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
     logging.info('Вызываем обработчик `get_photos_query_handler`')
@@ -181,7 +180,7 @@ async def get_photos_query_handler(callback: CallbackQuery, state: FSMContext):
     )
 
 
-@custom_router.callback_query.register(StateFilter(APIResponseStates.which_resource), F.data == 'todos')
+@custom_router.callback_query(APIResponseStates.which_resource, F.data == 'todos')
 async def get_todos_query_handler(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
     logging.info('Вызываем обработчик `get_todos_query_handler`')
@@ -199,30 +198,30 @@ async def get_todos_query_handler(callback: CallbackQuery, state: FSMContext):
     )
 
 
-# @custom_router.callback_query.register(
-#     StateFilter(APIResponseStates.which_resource, APIResponseStates.which_id),
-#     F.data == 'cancel'
-# )
-# async def get_cancel_operation_handler(callback: CallbackQuery, state: FSMContext):
-#     """
-#     Обработчик на случай, если пользователь захочет отменить команду.
-#     """
-#
-#     logging.info('Вызываем обработчик `get_cancel_operation_handler`')
-#
-#     await callback.answer()
-#
-#     await callback.message.answer('Отменяю..')
-#
-#     # Очищаем состояние
-#     await state.clear()
-#
-#     await callback.answer('Готово. Вы можете вызвать мои команды вновь(см. /help)')
+@custom_router.callback_query(
+    StateFilter(APIResponseStates.which_resource, APIResponseStates.which_id),
+    F.data == 'cancel'
+)
+async def get_cancel_operation_handler(callback: CallbackQuery, state: FSMContext):
+    """
+    Обработчик на случай, если пользователь захочет отменить команду.
+    """
+
+    logging.info('Вызываем обработчик `get_cancel_operation_handler`')
+
+    await callback.answer()
+
+    await callback.message.answer('Отменяю..')
+
+    # Очищаем состояние
+    await state.clear()
+
+    await callback.answer('Готово. Вы можете вызвать мои команды вновь(см. /help)')
 
 # -- Конец блока Callback Query --
 
 
-@custom_router.message.register(APIResponseStates.which_id, F.text.isdigit())
+@custom_router.message(APIResponseStates.which_id, F.text.isdigit())
 async def get_response_data_handler(message: Message, state: State, db):
     """
     Конечная функция-обработчик в цепочке /get.
