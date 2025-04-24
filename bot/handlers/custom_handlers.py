@@ -106,7 +106,7 @@ async def get_users_query_handler(callback: CallbackQuery, state: State):
     )
 
 
-@custom_router.callback_query.register(APIResponseStates.which_resource, F.data == 'posts')
+@custom_router.callback_query(APIResponseStates.which_resource, F.data == 'posts')
 async def get_posts_query_handler(callback: CallbackQuery, state: State):
     # Сохраняем ответ
     await state.update_data(resource='posts', pydantic_model=PostModel)
@@ -120,7 +120,7 @@ async def get_posts_query_handler(callback: CallbackQuery, state: State):
     )
 
 
-@custom_router.callback_query.register(APIResponseStates.which_resource, F.data == 'comments')
+@custom_router.callback_query(APIResponseStates.which_resource, F.data == 'comments')
 async def get_comments_query_handler(callback: CallbackQuery, state: State):
     # Сохраняем ответ
     await state.update_data(resource='comments', pydantic_model=CommentModel)
@@ -134,7 +134,7 @@ async def get_comments_query_handler(callback: CallbackQuery, state: State):
     )
 
 
-@custom_router.callback_query.register(APIResponseStates.which_resource, F.data == 'albums')
+@custom_router.callback_query(APIResponseStates.which_resource, F.data == 'albums')
 async def get_albums_query_handler(callback: CallbackQuery, state: State):
     # Сохраняем ответ
     await state.update_data(resource='albums', pydantic_model=AlbumModel)
@@ -148,7 +148,7 @@ async def get_albums_query_handler(callback: CallbackQuery, state: State):
     )
 
 
-@custom_router.callback_query.register(APIResponseStates.which_resource, F.data == 'photos')
+@custom_router.callback_query(APIResponseStates.which_resource, F.data == 'photos')
 async def get_photos_query_handler(callback: CallbackQuery, state: State):
     # Сохраняем ответ
     await state.update_data(resource='photos', pydantic_model=PhotoModel)
@@ -162,7 +162,7 @@ async def get_photos_query_handler(callback: CallbackQuery, state: State):
     )
 
 
-@custom_router.callback_query.register(APIResponseStates.which_resource, F.data == 'todos')
+@custom_router.callback_query(APIResponseStates.which_resource, F.data == 'todos')
 async def get_todos_query_handler(callback: CallbackQuery, state: State):
     # Сохраняем ответ
     await state.update_data(resource='todos', pydantic_model=TodoModel)
