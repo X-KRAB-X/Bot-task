@@ -73,7 +73,7 @@ async def _get_api_data_and_save(message: Message, db, pydantic_model, resource:
 
     validated_data = pydantic_model(**data)
 
-    return await db.create_obj(validated_data, resource, message.from_user.id)
+    return await db.create_obj(validated_data, resource=resource, telegram_user_id=message.from_user.id)
 
 
 @custom_router.message(Command(commands=['get']), StateFilter(None))

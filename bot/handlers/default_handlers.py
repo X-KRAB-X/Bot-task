@@ -17,7 +17,7 @@ async def help_handler(message: Message, bot: Bot):
     await message.answer(text='Я нахожу в разработке, умею только здороваться.', parse_mode=None)
 
 
-@default_router.message(StateFilter(None))
+@default_router.message()
 async def delete_message_handler(message: Message):
     """
     Удаляет сообщение пользователя.
