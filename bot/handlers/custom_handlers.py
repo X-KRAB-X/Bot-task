@@ -110,7 +110,7 @@ async def get_users_query_handler(callback: CallbackQuery, state: FSMContext):
     )
 
 
-@custom_router.callback_query.register(F.data == 'posts', StateFilter(APIResponseStates.which_resource))
+@custom_router.callback_query.register(StateFilter(APIResponseStates.which_resource), F.data == 'posts')
 async def get_posts_query_handler(callback: CallbackQuery, state: FSMContext):
     logging.info('Вызываем обработчик `get_posts_query_handler`')
 
@@ -128,7 +128,7 @@ async def get_posts_query_handler(callback: CallbackQuery, state: FSMContext):
     )
 
 
-@custom_router.callback_query.register(APIResponseStates.which_resource, F.data == 'comments')
+@custom_router.callback_query.register(StateFilter(APIResponseStates.which_resource), F.data == 'comments')
 async def get_comments_query_handler(callback: CallbackQuery, state: FSMContext):
     logging.info('Вызываем обработчик `get_comments_query_handler`')
 
@@ -146,7 +146,7 @@ async def get_comments_query_handler(callback: CallbackQuery, state: FSMContext)
     )
 
 
-@custom_router.callback_query(APIResponseStates.which_resource, F.data == 'albums')
+@custom_router.callback_query(StateFilter(APIResponseStates.which_resource), F.data == 'albums')
 async def get_albums_query_handler(callback: CallbackQuery, state: FSMContext):
     logging.info('Вызываем обработчик `get_albums_query_handler`')
 
@@ -164,7 +164,7 @@ async def get_albums_query_handler(callback: CallbackQuery, state: FSMContext):
     )
 
 
-@custom_router.callback_query(APIResponseStates.which_resource, F.data == 'photos')
+@custom_router.callback_query(StateFilter(APIResponseStates.which_resource), F.data == 'photos')
 async def get_photos_query_handler(callback: CallbackQuery, state: FSMContext):
     logging.info('Вызываем обработчик `get_photos_query_handler`')
 
@@ -182,7 +182,7 @@ async def get_photos_query_handler(callback: CallbackQuery, state: FSMContext):
     )
 
 
-@custom_router.callback_query(APIResponseStates.which_resource, F.data == 'todos')
+@custom_router.callback_query(StateFilter(APIResponseStates.which_resource), F.data == 'todos')
 async def get_todos_query_handler(callback: CallbackQuery, state: FSMContext):
     logging.info('Вызываем обработчик `get_todos_query_handler`')
 
