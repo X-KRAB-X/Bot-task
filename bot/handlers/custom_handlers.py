@@ -90,7 +90,7 @@ async def get_command_handler(message: Message, state: State):
 # и сохраняются необходимые данные. После этого одинаковый переход в следующее состояние - 'which_id'.
 # Также предусмотрена кнопка отмены с отменой состояния.
 
-@custom_router.callback_query(APIResponseStates.which_resource, F.data == 'users')
+@custom_router.callback_query.register(APIResponseStates.which_resource, F.data == 'users')
 async def get_users_query_handler(callback: CallbackQuery, state: State):
     logging.info('Вызываем обработчик `get_users_query_handler`')
 
@@ -108,7 +108,7 @@ async def get_users_query_handler(callback: CallbackQuery, state: State):
     )
 
 
-@custom_router.callback_query(APIResponseStates.which_resource, F.data == 'posts')
+@custom_router.callback_query.register(APIResponseStates.which_resource, F.data == 'posts')
 async def get_posts_query_handler(callback: CallbackQuery, state: State):
     logging.info('Вызываем обработчик `get_posts_query_handler`')
 
@@ -126,7 +126,7 @@ async def get_posts_query_handler(callback: CallbackQuery, state: State):
     )
 
 
-@custom_router.callback_query(APIResponseStates.which_resource, F.data == 'comments')
+@custom_router.callback_query.register(APIResponseStates.which_resource, F.data == 'comments')
 async def get_comments_query_handler(callback: CallbackQuery, state: State):
     logging.info('Вызываем обработчик `get_comments_query_handler`')
 
