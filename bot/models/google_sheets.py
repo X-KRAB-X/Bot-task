@@ -10,6 +10,10 @@ from config.config import CREDENTIALS_FILE, SPREADSHEET_ID, SCOPES
 # Вложенные данные преобразованы в "плоский" формат.
 sheets = {
     'users': [
+        'telegram_user_id',
+        'created_at',
+
+        # user
         'user_id',
         'name',
         'username',
@@ -33,11 +37,11 @@ sheets = {
         'company_bs',
         ],
 
-    'posts': ['post_id', 'user_id', 'title', 'body'],
-    'comments': ['comment_id', 'post_id', 'name', 'email', 'body'],
-    'albums': ['album_id', 'user_id', 'title'],
-    'photos': ['photo_id', 'album_id', 'title', 'url', 'thumbnail_url'],
-    'todos': ['todo_id', 'user_id', 'title', 'completed'],
+    'posts': ['telegram_user_id', 'created_at', 'post_id', 'user_id', 'title', 'body'],
+    'comments': ['telegram_user_id', 'created_at', 'comment_id', 'post_id', 'name', 'email', 'body'],
+    'albums': ['telegram_user_id', 'created_at', 'album_id', 'user_id', 'title'],
+    'photos': ['telegram_user_id', 'created_at', 'photo_id', 'album_id', 'title', 'url', 'thumbnail_url'],
+    'todos': ['telegram_user_id', 'created_at', 'todo_id', 'user_id', 'title', 'completed'],
 }
 
 
