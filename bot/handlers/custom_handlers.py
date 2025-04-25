@@ -213,7 +213,7 @@ async def get_back_operation_handler(callback: CallbackQuery, state: FSMContext)
     await state.set_state(APIResponseStates.which_resource)
 
     await callback.message.answer(
-        f'Отправляем запрос по URL {API_URL}\nКакой путь?',
+        f'Вы вернулись назад.\nОтправляем запрос по URL {API_URL}\nКакой путь?',
         reply_markup=api_get_keyboard
     )
 
