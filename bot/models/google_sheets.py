@@ -1,4 +1,5 @@
 import logging
+import asyncio
 
 import gspread
 
@@ -61,12 +62,12 @@ async def _create_sheet_if_not_exists(spreadsheet, sheet_name: str, sheet_header
     try:
         logging.info(f'Получаю лист {sheet_name}')
 
-        worksheet = spreadsheet.worksheet(sheet_name)
+        worksheet = await asyncio.to_thread(spreadsheet.worksheet, sheet_name)
     except gspread.exceptions.WorksheetNotFound:
         logging.info(f'Не удалось получить лист {sheet_name}. Создаю..')
 
-        worksheet = spreadsheet.add_worksheet(title=sheet_name, rows=1000, cols=20)
-        worksheet.append_row(sheet_headers)
+        worksheet = await asyncio.to_thread(spreadsheet.add_worksheet, title=sheet_name, rows=1000, cols=20)
+        await asyncio.to_thread(worksheet.append_row, sheet_headers)
 
 
 async def create_google_sheets():
@@ -77,10 +78,10 @@ async def create_google_sheets():
 
     try:
         # Создаем соединение.
-        client = gspread.service_account(filename=CREDENTIALS_FILE, scopes=SCOPES)
+        client = await asyncio.to_thread(gspread.service_account, filename=CREDENTIALS_FILE, scopes=SCOPES)
 
         # Получаем эл. таблицу
-        spreadsheet = client.open_by_key(SPREADSHEET_ID)
+        spreadsheet = await asyncio.to_thread(client.open_by_key,SPREADSHEET_ID)
     except Exception as e:
         logging.error(f'Ошибка при попытке получения таблицы Google Sheets:\n{e}')
     else:
