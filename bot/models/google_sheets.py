@@ -1,0 +1,84 @@
+import logging
+
+import gspread
+
+from config.config import CREDENTIALS_FILE, SPREADSHEET_ID, SCOPES
+
+
+# Данный словарь содержит в себе данные вида: "Лист": "Поля"
+# Значения в списках взяты из Pydantic-моделей.
+# Вложенные данные преобразованы в "плоский" формат.
+sheets = {
+    'users': [
+        'user_id',
+        'name',
+        'username',
+        'email',
+        'phone',
+        'website'
+        
+        # address
+        'address_street',
+        'address_suite',
+        'address_city',
+        'address_zipcode',
+
+        # geo
+        'address_geo_lat',
+        'address_geo_lng',
+
+        # company
+        'company_name',
+        'company_catchPhrase',
+        'company_bs',
+        ],
+
+    'posts': ['post_id', 'user_id', 'title', 'body'],
+    'comments': ['comment_id', 'post_id', 'name', 'email', 'body'],
+    'albums': ['album_id', 'user_id', 'title'],
+    'photos': ['photo_id', 'album_id', 'title', 'url', 'thumbnail_url'],
+    'todos': ['todo_id', 'user_id', 'title', 'completed'],
+}
+
+
+async def _create_sheet_if_not_exists(spreadsheet, sheet_name: str, sheet_headers: list):
+    """
+    Функция-исполнитель.
+    Проверяет, что лист существует. Если нет - создает его.
+
+    :param spreadsheet: Объект электронной таблицы.
+    :param sheet_name: Имя Листа.
+    :param sheet_headers: Список с заголовками столбцов.
+    :return:
+    """
+
+    # Если получится получить лист - ничего не делаем.
+    # Иначе - создаем его.
+    try:
+        logging.info(f'Получаю лист {sheet_name}')
+
+        worksheet = spreadsheet.worksheet(sheet_name)
+    except gspread.exceptions.WorksheetNotFound:
+        logging.info(f'Не удалось получить лист {sheet_name}. Создаю..')
+
+        worksheet = spreadsheet.add_worksheet(title=sheet_name, rows=1000, cols=20)
+        worksheet.append_row(sheet_headers)
+
+
+async def create_google_sheets():
+    """
+    Функция для создания листов в Google Sheets.
+    Создает листы, если они не существуют.
+    """
+
+    try:
+        # Создаем соединение.
+        client = gspread.service_account(filename=CREDENTIALS_FILE, scopes=SCOPES)
+
+        # Получаем эл. таблицу
+        spreadsheet = client.open_by_key(SPREADSHEET_ID)
+    except Exception as e:
+        logging.error(f'Ошибка при попытке получения таблицы Google Sheets:\n{e}')
+    else:
+        for sheet_name, sheet_headers in sheets.items():
+            await _create_sheet_if_not_exists(spreadsheet, sheet_name, sheet_headers)

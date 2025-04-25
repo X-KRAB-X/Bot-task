@@ -28,6 +28,15 @@ API_URL = 'https://jsonplaceholder.typicode.com/'
 DATABASE_URL = 'postgresql+asyncpg://andrey:joker2500@localhost/test_base'
 
 
+# -- GOOGLE SHEETS API --
+CREDENTIALS_FILE = '/home/andrey/test-telegram-project-457912-44807d6a9fe6.json'
+SPREADSHEET_ID = '1f2MCcCE5yyH8DNMNTBmTNljTH7RU_70-GyIygDA3nNI'
+SCOPES = [
+    'https://www.googleapis.com/auth/spreadsheets',
+    'https://www.googleapis.com/auth/drive'
+]
+
+
 # -- Bot commands --
 BOT_COMMANDS = [
     BotCommand(command='/start', description='Приветствие'),
