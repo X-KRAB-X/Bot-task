@@ -126,7 +126,7 @@ async def get_posts_query_handler(callback: CallbackQuery, state: FSMContext):
 
 @custom_router.callback_query(APIResponseStates.which_resource, F.data == 'comments')
 async def get_comments_query_handler(callback: CallbackQuery, state: FSMContext):
-    await callback.answer()
+    await callback.answer('Выбран путь "/comments".')
     logging.info('Вызываем обработчик `get_comments_query_handler`')
 
 
@@ -144,7 +144,7 @@ async def get_comments_query_handler(callback: CallbackQuery, state: FSMContext)
 
 @custom_router.callback_query(APIResponseStates.which_resource, F.data == 'albums')
 async def get_albums_query_handler(callback: CallbackQuery, state: FSMContext):
-    await callback.answer()
+    await callback.answer('Выбран путь "/albums".')
     logging.info('Вызываем обработчик `get_albums_query_handler`')
 
     # Сохраняем ответ
@@ -161,7 +161,7 @@ async def get_albums_query_handler(callback: CallbackQuery, state: FSMContext):
 
 @custom_router.callback_query(APIResponseStates.which_resource, F.data == 'photos')
 async def get_photos_query_handler(callback: CallbackQuery, state: FSMContext):
-    await callback.answer()
+    await callback.answer('Выбран путь "/photos".')
     logging.info('Вызываем обработчик `get_photos_query_handler`')
 
 
@@ -179,7 +179,7 @@ async def get_photos_query_handler(callback: CallbackQuery, state: FSMContext):
 
 @custom_router.callback_query(APIResponseStates.which_resource, F.data == 'todos')
 async def get_todos_query_handler(callback: CallbackQuery, state: FSMContext):
-    await callback.answer()
+    await callback.answer('Выбран путь "/todos".')
     logging.info('Вызываем обработчик `get_todos_query_handler`')
 
 
@@ -206,14 +206,14 @@ async def get_cancel_operation_handler(callback: CallbackQuery, state: FSMContex
 
     logging.info('Вызываем обработчик `get_cancel_operation_handler`')
 
-    await callback.answer()
+    await callback.answer('Отменено.')
 
     await callback.message.answer('Отменяю..')
 
     # Очищаем состояние
     await state.clear()
 
-    await callback.answer('Готово. Вы можете вызвать мои команды вновь(см. /help)')
+    await callback.message.answer('Готово. Вы можете вызвать мои команды вновь(см. /help)')
 
 # -- Конец блока Callback Query --
 
