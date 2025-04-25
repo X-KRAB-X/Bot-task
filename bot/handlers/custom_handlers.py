@@ -103,7 +103,8 @@ async def get_users_query_handler(callback: CallbackQuery, state: FSMContext):
     await state.set_state(APIResponseStates.which_id)
 
     await callback.message.answer(
-        f'Какой id ресурса?\nВведите целое число от 1 до {available_resources["users"]}.'
+        f'Какой id ресурса?\nВведите целое число от 1 до {available_resources["users"]}.',
+        reply_markup=only_cancel_keyboard
     )
 
 @custom_router.callback_query(APIResponseStates.which_resource, F.data == 'posts')
@@ -120,7 +121,8 @@ async def get_posts_query_handler(callback: CallbackQuery, state: FSMContext):
     await state.set_state(APIResponseStates.which_id)
 
     await callback.message.answer(
-        f'Какой id ресурса?\nВведите целое число от 1 до {available_resources["posts"]}.'
+        f'Какой id ресурса?\nВведите целое число от 1 до {available_resources["posts"]}.',
+        reply_markup=only_cancel_keyboard
     )
 
 
@@ -138,7 +140,8 @@ async def get_comments_query_handler(callback: CallbackQuery, state: FSMContext)
     await state.set_state(APIResponseStates.which_id)
 
     await callback.message.answer(
-        f'Выбран путь "/comments". Какой id ресурса?\nВведите целое число от 1 до {available_resources["comments"]}.'
+        f'Выбран путь "/comments". Какой id ресурса?\nВведите целое число от 1 до {available_resources["comments"]}.',
+        reply_markup=only_cancel_keyboard
     )
 
 
@@ -155,7 +158,8 @@ async def get_albums_query_handler(callback: CallbackQuery, state: FSMContext):
     await state.set_state(APIResponseStates.which_id)
 
     await callback.message.answer(
-        f'Выбран путь "/albums". Какой id ресурса?\nВведите целое число от 1 до {available_resources["albums"]}.'
+        f'Выбран путь "/albums". Какой id ресурса?\nВведите целое число от 1 до {available_resources["albums"]}.',
+        reply_markup=only_cancel_keyboard
     )
 
 
@@ -173,7 +177,8 @@ async def get_photos_query_handler(callback: CallbackQuery, state: FSMContext):
     await state.set_state(APIResponseStates.which_id)
 
     await callback.message.answer(
-        f'Выбран путь "/photos". Какой id ресурса?\nВведите целое число от 1 до {available_resources["photos"]}.'
+        f'Выбран путь "/photos". Какой id ресурса?\nВведите целое число от 1 до {available_resources["photos"]}.',
+        reply_markup=only_cancel_keyboard
     )
 
 
@@ -191,7 +196,8 @@ async def get_todos_query_handler(callback: CallbackQuery, state: FSMContext):
     await state.set_state(APIResponseStates.which_id)
 
     await callback.message.answer(
-        f'Выбран путь "/todos". Какой id ресурса?\nВведите целое число от 1 до {available_resources["todos"]}.'
+        f'Выбран путь "/todos". Какой id ресурса?\nВведите целое число от 1 до {available_resources["todos"]}.',
+        reply_markup=only_cancel_keyboard
     )
 
 
