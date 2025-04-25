@@ -129,10 +129,13 @@ class _Users(_ServiceBase):
                 user_db.telegram_user_id = telegram_user_id
 
                 db.add(user_db)
+                logging.info('Выполнил -- db.add(user_db) --')
 
                 # Обновляем объект и получаем поля из БД
                 await db.flush()
+                logging.info('Выполнил -- db.flush() --')
                 await db.refresh(user_db)
+                logging.info('Выполнил -- db.refresh(user_db) --')
 
                 # Возвращаем сериализованный JSON объект
                 user_validated = UserModelFromDB.model_validate(user_db)
