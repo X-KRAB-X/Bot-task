@@ -217,7 +217,7 @@ class _Comments(_ServiceBase):
 
                 # Создаем объект модели
                 comment_api_data = comment_pydantic.model_dump()
-                comment_db = PostDBModel(**comment_api_data)
+                comment_db = CommentDBModel(**comment_api_data)
 
                 # Отдельно добавляем Telegram ID
                 comment_db.telegram_user_id = telegram_user_id
