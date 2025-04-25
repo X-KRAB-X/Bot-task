@@ -40,12 +40,11 @@ available_resources = {
 }
 
 
-async def _get_api_data_and_save(message: Message, db, pydantic_model, resource: str, resource_id: int) -> str:
+async def _get_api_data_and_save(db, pydantic_model, telegram_user_id, resource: str, resource_id: int) -> str:
     """
-    Данная функция является общей для всех обработчиков.
+    Функция-исполнитель.
     Получает введенные данные и отправляет запрос с последующим сохранением в БД.
 
-    :param message: Объект Message, нужен для взаимодействия с пользователем и получения ID.
     :param db: Сервис БД для сохранения объекта.
     :param pydantic_model: Модель для валидации в зависимости от указанного URL.
     :param resource: Название URL, по которому был отправлен запрос.
@@ -54,8 +53,6 @@ async def _get_api_data_and_save(message: Message, db, pydantic_model, resource:
 
     :return: JSON-Pydantic модель с данными из БД
     """
-
-    await message.answer('Отправляю запрос и собираю данные..')
 
     logging.info('Отправляю запрос на URL {API_URL}{resource}/{resource_id}'.format(
         API_URL=API_URL,
@@ -73,7 +70,7 @@ async def _get_api_data_and_save(message: Message, db, pydantic_model, resource:
 
     validated_data = pydantic_model(**data)
 
-    return await db.create_obj(validated_data, resource=resource, telegram_user_id=message.from_user.id)
+    return await db.create_obj(validated_data, resource=resource, telegram_user_id=telegram_user_id)
 
 
 @custom_router.message(Command(commands=['get']), StateFilter(None))
@@ -234,12 +231,13 @@ async def get_response_data_handler(message: Message, state: State, db):
     # Проверяем, что пользователь не вылез за пределы допустимых id
     if 1 <= int(message.text) <= available_resources[data['resource']]:
         try:
+            await message.answer('Отправляю запрос и собираю данные..')
 
             # Передаем данные в функцию для запроса к API и сохранения в БД.
             data_db = await _get_api_data_and_save(
-                message=message,
                 db=db,
                 pydantic_model=data['pydantic_model'],
+                telegram_user_id=message.from_user.id,
                 resource=data['resource'],
                 resource_id=int(message.text)
             )
