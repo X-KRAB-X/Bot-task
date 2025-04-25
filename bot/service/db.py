@@ -134,7 +134,7 @@ class _Users(_ServiceBase):
                 # Обновляем объект и получаем поля из БД
                 await db.flush()
                 logging.info('Выполнил -- db.flush() --')
-                await db.refresh(user_db)
+                await db.refresh(user_db, attribute_names=['address', 'company'])
                 logging.info('Выполнил -- db.refresh(user_db) --')
 
                 # Возвращаем сериализованный JSON объект
