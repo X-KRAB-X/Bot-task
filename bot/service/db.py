@@ -112,7 +112,7 @@ class _Users(_ServiceBase):
                 user_address_geo_api_data = user_pydantic.address.geo.model_dump()
                 user_address_api_data = user_pydantic.address.model_dump(exclude={'geo'})
                 user_company_api_data = user_pydantic.company.model_dump()
-                user_api_data = user_pydantic.model_dump(exclude={'address'})
+                user_api_data = user_pydantic.model_dump(exclude={'address', 'company'})
 
                 print(f'user_address_geo_api_data - {user_address_geo_api_data}')
                 print(f'user_address_api_data - {user_address_api_data}')
