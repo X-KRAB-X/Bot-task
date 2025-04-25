@@ -103,7 +103,7 @@ async def get_users_query_handler(callback: CallbackQuery, state: FSMContext):
     await state.set_state(APIResponseStates.which_id)
 
     await callback.message.answer(
-        f'Какой id ресурса?\nВведите целое число от 1 до {available_resources["users"]}.',
+        f'Выбран путь "/users". Какой id ресурса?\nВведите целое число от 1 до {available_resources["users"]}.',
         reply_markup=back_and_cancel_keyboard
     )
 
@@ -121,7 +121,7 @@ async def get_posts_query_handler(callback: CallbackQuery, state: FSMContext):
     await state.set_state(APIResponseStates.which_id)
 
     await callback.message.answer(
-        f'Какой id ресурса?\nВведите целое число от 1 до {available_resources["posts"]}.',
+        f'Выбран путь "/posts". Какой id ресурса?\nВведите целое число от 1 до {available_resources["posts"]}.',
         reply_markup=back_and_cancel_keyboard
     )
 
