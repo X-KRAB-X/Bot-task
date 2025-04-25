@@ -18,5 +18,6 @@ api_get_keyboard = InlineKeyboardMarkup(inline_keyboard=[
 ])
 
 back_and_cancel_keyboard = InlineKeyboardMarkup(inline_keyboard=[
+    [back_button],
     [cancel_button]
 ])
