@@ -114,11 +114,6 @@ class _Users(_ServiceBase):
                 user_company_api_data = user_pydantic.company.model_dump()
                 user_api_data = user_pydantic.model_dump(exclude={'address', 'company'})
 
-                print(f'user_address_geo_api_data - {user_address_geo_api_data}')
-                print(f'user_address_api_data - {user_address_api_data}')
-                print(f'user_company_api_data - {user_company_api_data}')
-                print(f'user_api_data - {user_api_data}')
-
                 # Создаем объекты моделей
                 user_address_geo_db = GeoDBModel(**user_address_geo_api_data)
                 user_address_db = AddressDBModel(**user_address_api_data, geo=user_address_geo_db)
@@ -129,13 +124,10 @@ class _Users(_ServiceBase):
                 user_db.telegram_user_id = telegram_user_id
 
                 db.add(user_db)
-                logging.info('Выполнил -- db.add(user_db) --')
 
                 # Обновляем объект и получаем поля из БД
                 await db.flush()
-                logging.info('Выполнил -- db.flush() --')
                 await db.refresh(user_db, attribute_names=['address', 'company'])
-                logging.info('Выполнил -- db.refresh(user_db) --')
 
                 # Возвращаем сериализованный JSON объект
                 user_validated = UserModelFromDB.model_validate(user_db)
