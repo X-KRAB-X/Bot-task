@@ -12,7 +12,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from api.api import get_json_response
 from config.config import API_URL
 from states.states import APIResponseStates
-from keyboard.api_get_keyboard import api_get_keyboard, only_cancel_keyboard, test_keyboard
+from keyboard.api_get_keyboard import api_get_keyboard, only_cancel_keyboard
 
 # Pydantic
 from models.pydantic_api import (
