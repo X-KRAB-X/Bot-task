@@ -12,7 +12,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from api.api import get_json_response
 from config.config import API_URL
 from states.states import APIResponseStates
-from keyboard.api_get_keyboard import api_get_keyboard, only_cancel_keyboard
+from keyboard.api_get_keyboard import api_get_keyboard, back_and_cancel_keyboard
 
 # Pydantic
 from models.pydantic_api import (
@@ -104,7 +104,7 @@ async def get_users_query_handler(callback: CallbackQuery, state: FSMContext):
 
     await callback.message.answer(
         f'Какой id ресурса?\nВведите целое число от 1 до {available_resources["users"]}.',
-        reply_markup=only_cancel_keyboard
+        reply_markup=back_and_cancel_keyboard
     )
 
 @custom_router.callback_query(APIResponseStates.which_resource, F.data == 'posts')
@@ -122,7 +122,7 @@ async def get_posts_query_handler(callback: CallbackQuery, state: FSMContext):
 
     await callback.message.answer(
         f'Какой id ресурса?\nВведите целое число от 1 до {available_resources["posts"]}.',
-        reply_markup=only_cancel_keyboard
+        reply_markup=back_and_cancel_keyboard
     )
 
 
@@ -141,7 +141,7 @@ async def get_comments_query_handler(callback: CallbackQuery, state: FSMContext)
 
     await callback.message.answer(
         f'Выбран путь "/comments". Какой id ресурса?\nВведите целое число от 1 до {available_resources["comments"]}.',
-        reply_markup=only_cancel_keyboard
+        reply_markup=back_and_cancel_keyboard
     )
 
 
@@ -159,7 +159,7 @@ async def get_albums_query_handler(callback: CallbackQuery, state: FSMContext):
 
     await callback.message.answer(
         f'Выбран путь "/albums". Какой id ресурса?\nВведите целое число от 1 до {available_resources["albums"]}.',
-        reply_markup=only_cancel_keyboard
+        reply_markup=back_and_cancel_keyboard
     )
 
 
@@ -178,7 +178,7 @@ async def get_photos_query_handler(callback: CallbackQuery, state: FSMContext):
 
     await callback.message.answer(
         f'Выбран путь "/photos". Какой id ресурса?\nВведите целое число от 1 до {available_resources["photos"]}.',
-        reply_markup=only_cancel_keyboard
+        reply_markup=back_and_cancel_keyboard
     )
 
 
@@ -197,7 +197,24 @@ async def get_todos_query_handler(callback: CallbackQuery, state: FSMContext):
 
     await callback.message.answer(
         f'Выбран путь "/todos". Какой id ресурса?\nВведите целое число от 1 до {available_resources["todos"]}.',
-        reply_markup=only_cancel_keyboard
+        reply_markup=back_and_cancel_keyboard
+    )
+
+
+@custom_router.callback_query(APIResponseStates.which_id, F.data == 'back')
+async def get_back_operation_handler(callback: CallbackQuery, state: FSMContext):
+    """
+    Обработчик на случай, если пользователь захочет вернуться назад и выбрать другой вариант.
+    """
+
+    await callback.answer('Можете выбрать снова.')
+
+    # Устанавливаем предыдущее состояние
+    await state.set_state(APIResponseStates.which_resource)
+
+    await callback.message.answer(
+        f'Отправляем запрос по URL {API_URL}\nКакой путь?',
+        reply_markup=api_get_keyboard
     )
 
 
@@ -219,7 +236,7 @@ async def get_cancel_operation_handler(callback: CallbackQuery, state: FSMContex
     # Очищаем состояние
     await state.clear()
 
-    await callback.message.answer('Готово. Вы можете вызвать мои команды вновь(см. /help)')
+    await callback.message.answer('Готово. Можете снова написать команду /get или любую другую(см. /help)')
 
 # -- Конец блока Callback Query --
 
