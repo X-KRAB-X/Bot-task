@@ -104,15 +104,15 @@ class _Users(_ServiceBase):
     Реализует метод create_user, который отвечает за сохранение в БД юзера и ID тг-пользователя.
     """
 
-    async def create_user(self, user_pydantic: UserModel, telegram_user_id):
+    async def create_user(self, user_pydantic: UserModel, telegram_user_id) -> str:
         async with self.db_session_manager.session() as db:
             try:
 
                 # Получаем данные из связанных Pydantic-моделей
                 user_address_geo_api_data = user_pydantic.address.geo.model_dump()
-                user_address_api_data = user_pydantic.address.model_dump()
+                user_address_api_data = user_pydantic.address.model_dump(exclude={'geo'})
                 user_company_api_data = user_pydantic.company.model_dump()
-                user_api_data = user_pydantic.model_dump()
+                user_api_data = user_pydantic.model_dump(exclude={'address', 'company'})
 
                 # Создаем объекты моделей
                 user_address_geo_db = GeoDBModel(**user_address_geo_api_data)
@@ -127,7 +127,7 @@ class _Users(_ServiceBase):
 
                 # Обновляем объект и получаем поля из БД
                 await db.flush()
-                await db.refresh(user_db)
+                await db.refresh(user_db, attribute_names=['address', 'company'])
 
                 # Возвращаем сериализованный JSON объект
                 user_validated = UserModelFromDB.model_validate(user_db)
@@ -211,13 +211,13 @@ class _Comments(_ServiceBase):
     Реализует метод create_comment, который отвечает за сохранение в БД комментария и ID тг-пользователя.
     """
 
-    async def create_comment(self, comment_pydantic: CommentModel, telegram_user_id):
+    async def create_comment(self, comment_pydantic: CommentModel, telegram_user_id) -> str:
         async with self.db_session_manager.session() as db:
             try:
 
                 # Создаем объект модели
                 comment_api_data = comment_pydantic.model_dump()
-                comment_db = PostDBModel(**comment_api_data)
+                comment_db = CommentDBModel(**comment_api_data)
 
                 # Отдельно добавляем Telegram ID
                 comment_db.telegram_user_id = telegram_user_id
@@ -244,7 +244,7 @@ class _Albums(_ServiceBase):
     Реализует метод create_album, который отвечает за сохранение в БД альбома и ID тг-пользователя.
     """
 
-    async def create_album(self, album_pydantic: AlbumModel, telegram_user_id):
+    async def create_album(self, album_pydantic: AlbumModel, telegram_user_id) -> str:
         async with self.db_session_manager.session() as db:
             try:
 
@@ -278,7 +278,7 @@ class _Photos(_ServiceBase):
     Реализует метод create_photo, который отвечает за сохранение в БД фото и ID тг-пользователя.
     """
 
-    async def create_photo(self, photo_pydantic: PhotoModel, telegram_user_id):
+    async def create_photo(self, photo_pydantic: PhotoModel, telegram_user_id) -> str:
         async with self.db_session_manager.session() as db:
             try:
 
@@ -311,7 +311,7 @@ class _Todos(_ServiceBase):
     Реализует метод create_todo, который отвечает за сохранение в БД заметки и ID тг-пользователя.
     """
 
-    async def create_todo(self, todo_pydantic: TodoModel, telegram_user_id):
+    async def create_todo(self, todo_pydantic: TodoModel, telegram_user_id) -> str:
         async with self.db_session_manager.session() as db:
             try:
 
@@ -342,5 +342,25 @@ class ServiceDB(_Users, _Posts, _Comments, _Albums, _Photos, _Todos):
     """
     Класс-сервис.
     Объединяет в себе методы для работы со всеми моделями БД, предоставляя единый интерфейс управления.
+    Делает это при помощи метода create_obj, который принимает: Данные в pydantic модели, название метода,
+    ID пользователя.
     """
-    pass
+
+    async def create_obj(self, validated_data, resource: str, telegram_user_id: int) -> str:
+        if resource.lower() == 'users':
+            return await self.create_user(validated_data, telegram_user_id=telegram_user_id)
+
+        elif resource.lower() == 'posts':
+            return await self.create_post(validated_data, telegram_user_id=telegram_user_id)
+
+        elif resource.lower() == 'comments':
+            return await self.create_comment(validated_data, telegram_user_id=telegram_user_id)
+
+        elif resource.lower() == 'albums':
+            return await self.create_album(validated_data, telegram_user_id=telegram_user_id)
+
+        elif resource.lower() == 'photos':
+            return await self.create_photo(validated_data, telegram_user_id=telegram_user_id)
+
+        elif resource.lower() == 'todos':
+            return await self.create_todo(validated_data, telegram_user_id=telegram_user_id)
