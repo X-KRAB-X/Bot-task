@@ -63,6 +63,8 @@ async def _create_sheet_if_not_exists(spreadsheet, sheet_name: str, sheet_header
         logging.info(f'Получаю лист {sheet_name}')
 
         worksheet = await asyncio.to_thread(spreadsheet.worksheet, sheet_name)
+
+        logging.info(f'Лист {sheet_name} существует.')
     except gspread.exceptions.WorksheetNotFound:
         logging.info(f'Не удалось получить лист {sheet_name}. Создаю..')
 
