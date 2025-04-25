@@ -114,6 +114,11 @@ class _Users(_ServiceBase):
                 user_company_api_data = user_pydantic.company.model_dump()
                 user_api_data = user_pydantic.model_dump()
 
+                print(f'user_address_geo_api_data - {user_address_geo_api_data}')
+                print(f'user_address_api_data - {user_address_api_data}')
+                print(f'user_company_api_data - {user_company_api_data}')
+                print(f'user_api_data - {user_api_data}')
+
                 # Создаем объекты моделей
                 user_address_geo_db = GeoDBModel(**user_address_geo_api_data)
                 user_address_db = AddressDBModel(**user_address_api_data, geo=user_address_geo_db)

@@ -33,5 +33,4 @@ BOT_COMMANDS = [
     BotCommand(command='/start', description='Приветствие'),
     BotCommand(command='/help', description='Помощь по командам'),
     BotCommand(command='/get', description='Сделать запрос к API'),
-    BotCommand(command='/test', description='Для проверки')
 ]
