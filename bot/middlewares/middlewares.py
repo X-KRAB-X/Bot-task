@@ -7,7 +7,8 @@ from typing import Annotated
 from aiogram.types import TelegramObject
 from injectable import injectable, autowired, Autowired
 
-from service.db import ServiceDB, ServiceGH
+from service.db import ServiceDB
+from service.google_sheets import ServiceGH
 
 
 @injectable
