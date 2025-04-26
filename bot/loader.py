@@ -22,7 +22,10 @@ from handlers.custom_handlers import custom_router
 
 # БД
 from models.db import create_tables
-from middlewares.middlewares import DBMiddleware
+from middlewares.middlewares import ServicesMiddleware
+
+# Google Sheets
+from models.google_sheets import create_google_sheets
 
 from injectable import load_injection_container
 
@@ -75,7 +78,7 @@ async def clear_webhook(bot_instance: Bot) -> None:
 async def loader() -> web.AppRunner:
     """
     Сборка и настройка всех частей бота:
-    Веб-приложение, Вебхук для бота, БД, команды.
+    Веб-приложение, Вебхук для бота, БД, Листы Google Sheets, команды.
     """
 
     # Загрузка команд в бота
@@ -87,8 +90,11 @@ async def loader() -> web.AppRunner:
     # Создаем таблицы БД если их нет
     await create_tables()
 
+    # Создаем листы в Google Sheets
+    await create_google_sheets()
+
     # Регистрация middleware БД
-    dp.message.outer_middleware(DBMiddleware())
+    dp.message.outer_middleware(ServicesMiddleware())
 
     # Инициализируем webhook
     await _set_webhook(bot_instance=bot)

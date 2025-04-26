@@ -5,9 +5,7 @@
 
 from datetime import datetime
 
-from pydantic import BaseModel, validator, Field, ConfigDict
-
-from models.db import PhotoDBModel
+from pydantic import BaseModel, Field, ConfigDict
 
 
 class _DBMixin(BaseModel):
