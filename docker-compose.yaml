@@ -1,6 +1,6 @@
 services:
   bot:
-    build: .Dockerfile
+    build: .
     restart: always
     env_file:
       - .env
