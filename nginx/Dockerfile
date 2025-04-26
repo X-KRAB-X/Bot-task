@@ -13,6 +13,10 @@ RUN mkdir -p /var/www/certbot
 
 FROM base
 
+COPY --from=base /etc/nginx/sites-available/andrey-bokarev.ru /etc/nginx/sites-available/
+COPY --from=base /etc/nginx/sites-enabled/andrey-bokarev.ru /etc/nginx/sites-enabled/
+COPY --from=base /var/www/certbot /var/www/certbot
+
 RUN apt-get update && apt-get install -y certbot python3-certbot-nginx
 
 ENV DOMAIN='andrey-bokarev.ru'
