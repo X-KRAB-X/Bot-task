@@ -314,7 +314,7 @@ async def get_response_data_handler(message: Message, state: FSMContext, db, gh)
             # Сохраняем в PostgreSQL
             await message.answer('Сохраняю данные в БД..')
 
-            db_data = _save_data_into_db(
+            db_data = await _save_data_into_db(
                 db=db,
                 validated_data=api_data,
                 resource=data['resource'],
