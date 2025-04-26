@@ -59,10 +59,10 @@ class _Users(_BaseGHService):
     async def create_user(self, pydantic_model: UserModel, telegram_user_id: int):
         try:
             # Получаем данные от API
-            user_address_geo_api_data = pydantic_model.address.geo.model_dump()
-            user_address_api_data = pydantic_model.address.model_dump(exclude={'geo'})
-            user_company_api_data = pydantic_model.company.model_dump()
-            user_api_data = pydantic_model.model_dump(exclude={'address', 'company'})
+            user_address_geo_api_data = pydantic_model.address.geo
+            user_address_api_data = pydantic_model.address
+            user_company_api_data = pydantic_model.company
+            user_api_data = pydantic_model
 
             # Создаем список с данными для заполнения строки
             user_data_list = [
@@ -103,7 +103,7 @@ class _Posts(_BaseGHService):
     async def create_post(self, pydantic_model: PostModel, telegram_user_id: int):
         try:
             # Получаем данные от API
-            post_api_data = pydantic_model.model_dump()
+            post_api_data = pydantic_model
 
             # Создаем список с данными для заполнения строки
             post_data_list = [
@@ -129,7 +129,7 @@ class _Comments(_BaseGHService):
     async def create_comment(self, pydantic_model: CommentModel, telegram_user_id: int):
         try:
             # Получаем данные от API
-            comment_api_data = pydantic_model.model_dump()
+            comment_api_data = pydantic_model
 
             # Создаем список с данными для заполнения строки
             comment_data_list = [
@@ -156,7 +156,7 @@ class _Albums(_BaseGHService):
     async def create_album(self, pydantic_model: AlbumModel, telegram_user_id: int):
         try:
             # Получаем данные от API
-            album_api_data = pydantic_model.model_dump()
+            album_api_data = pydantic_model
 
             # Создаем список с данными для заполнения строки
             album_data_list = [
@@ -181,7 +181,7 @@ class _Photos(_BaseGHService):
     async def create_photo(self, photo_pydantic: PhotoModel, telegram_user_id: int):
         try:
             # Получаем данные от API
-            photo_api_data = photo_pydantic.model_dump()
+            photo_api_data = photo_pydantic
 
             # Создаем список с данными для заполнения строки
             photo_data_list = [
@@ -208,7 +208,7 @@ class _Todos(_BaseGHService):
     async def create_todo(self, todo_pydantic: TodoModel, telegram_user_id: int):
         try:
             # Получаем данные от API
-            todo_api_data = todo_pydantic.model_dump()
+            todo_api_data = todo_pydantic
 
             # Создаем список с данными для заполнения строки
             todo_data_list = [
