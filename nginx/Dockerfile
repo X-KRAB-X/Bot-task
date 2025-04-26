@@ -1,4 +1,4 @@
-FROM nginx:latest
+FROM nginx:latest AS base
 
 RUN rm /etc/nginx/conf.d/default.conf
 
