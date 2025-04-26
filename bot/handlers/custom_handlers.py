@@ -4,7 +4,6 @@ import json
 from aiogram import Router, F
 from aiogram.filters import Command, StateFilter
 from aiogram.types import Message, CallbackQuery
-from aiogram.fsm.state import State
 from aiogram.fsm.context import FSMContext
 
 from sqlalchemy.exc import SQLAlchemyError
@@ -40,18 +39,15 @@ available_resources = {
 }
 
 
-async def _get_api_data_and_save(db, pydantic_model, telegram_user_id, resource: str, resource_id: int) -> str:
+async def _get_api_data(resource: str, resource_id: int, pydantic_model):
     """
-    Функция-исполнитель.
-    Получает введенные данные и отправляет запрос с последующим сохранением в БД.
+    Функция для выполнения запросов к API и трансформации данных.
 
-    :param db: Сервис БД для сохранения объекта.
-    :param pydantic_model: Модель для валидации в зависимости от указанного URL.
     :param resource: Название URL, по которому был отправлен запрос.
-    Таким образом указывается метод, который будет вызван для создания записи.
     :param resource_id: ID выбранного ресурса.
+    :param pydantic_model: Pydantic-модель в зависимости от выбранного ресурса.
 
-    :return: JSON-Pydantic модель с данными из БД
+    :return: Pydantic-модель с данными внутри.
     """
 
     logging.info('Отправляю запрос на URL {API_URL}{resource}/{resource_id}'.format(
@@ -60,6 +56,7 @@ async def _get_api_data_and_save(db, pydantic_model, telegram_user_id, resource:
         resource_id=resource_id
     ))
 
+    # Отправляем запрос
     data = await get_json_response(
         API_URL,
         resource + '/' + str(resource_id)
@@ -70,11 +67,44 @@ async def _get_api_data_and_save(db, pydantic_model, telegram_user_id, resource:
 
     validated_data = pydantic_model(**data)
 
+    return validated_data
+
+
+async def _save_data_into_db(db, validated_data, resource: str, telegram_user_id):
+    """
+    Функция-исполнитель для работы с БД.
+
+    :param db: Сервис БД для сохранения объекта.
+    :param validated_data: Pydantic-модель с данными.
+    :param resource: Название метода, который необходимо вызвать для сохранения.
+    Соответствует названию ресурса.
+    :param telegram_user_id: ID пользователя.
+
+    :return: JSON-Pydantic модель с данными из БД.
+    """
+
+    logging.info('Сохраняю данные в БД')
     return await db.create_obj(validated_data, resource=resource, telegram_user_id=telegram_user_id)
 
 
+async def _save_data_into_gh(gh, validated_data, resource: str, telegram_user_id):
+    """
+    Функция-исполнитель для работы с Google Sheets.
+
+    :param gh: Сервис Google Sheets для сохранения объекта.
+    :param validated_data: Pydantic-модель с данными.
+    :param resource: Название метода, который необходимо вызвать для сохранения.
+    Соответствует названию ресурса.
+    :param telegram_user_id: ID пользователя.
+    """
+
+    logging.info('Сохраняю данные в Google Sheets')
+    await gh.create_obj(validated_data, resource=resource, telegram_user_id=telegram_user_id)
+    logging.info('Успешно сохранены данные в Google Sheets')
+
+
 @custom_router.message(Command(commands=['get']), StateFilter(None))
-async def get_command_handler(message: Message, state: State):
+async def get_command_handler(message: Message, state: FSMContext):
     logging.info('Вызываем обработчик `/get`')
 
     await message.answer(f'Отправляем запрос по URL {API_URL}\nКакой путь?', reply_markup=api_get_keyboard)
@@ -83,7 +113,8 @@ async def get_command_handler(message: Message, state: State):
     await state.set_state(APIResponseStates.which_resource)
     logging.info('Установлено состояние - WHICH_RESOURCE')
 
-# -- Блок Callback Query хендлеров --
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~ Блок Callback-Query хендлеров ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # Здесь функционал сводится к тому, что для каждого выбора пользователя появляется свой ответ
 # и сохраняются необходимые данные. После этого одинаковый переход в следующее состояние - 'which_id'.
@@ -238,14 +269,19 @@ async def get_cancel_operation_handler(callback: CallbackQuery, state: FSMContex
 
     await callback.message.answer('Готово. Можете снова написать команду /get или любую другую(см. /help)')
 
-# -- Конец блока Callback Query --
+# ~~~~~~~~~~~~~~~~~~~~~~~~~ Конец блока Callback Query ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 @custom_router.message(APIResponseStates.which_id, F.text.isdigit())
-async def get_response_data_handler(message: Message, state: State, db):
+async def get_response_data_handler(message: Message, state: FSMContext, db, gh):
     """
     Конечная функция-обработчик в цепочке /get.
-    Вызывает функцию `_get_api_data_and_save()` для выполнения всех действий с API и БД.
+
+    Служит связующим звеном между данными и функциями-исполнителями.
+    Вызывает функцию `_get_api_data`, после чего данные из нее
+    передаются в функции `_save_data_into_gh` и `_save_data_into_db`.
+
+    В конце чистит состояние.
     """
 
     data = await state.get_data()
@@ -254,23 +290,44 @@ async def get_response_data_handler(message: Message, state: State, db):
     # Проверяем, что пользователь не вылез за пределы допустимых id
     if 1 <= int(message.text) <= available_resources[data['resource']]:
         try:
+            # Получаем данные API
             await message.answer('Отправляю запрос и собираю данные..')
 
-            # Передаем данные в функцию для запроса к API и сохранения в БД.
-            data_db = await _get_api_data_and_save(
-                db=db,
-                pydantic_model=data['pydantic_model'],
-                telegram_user_id=message.from_user.id,
+            api_data = _get_api_data(
                 resource=data['resource'],
-                resource_id=int(message.text)
+                resource_id=int(message.text),
+                pydantic_model=data['pydantic_model']
             )
+            await message.answer('Готово!')
 
-            await message.answer(f'Было получен и сохранен в БД ответ JSON:\n{data_db}')
+            # Сохраняем данные в Google Sheets
+            await message.answer('Сохраняю данные в Google Sheets..')
+
+            await _save_data_into_gh(
+                gh=gh,
+                validated_data=api_data,
+                resource=data['resource'],
+                telegram_user_id=message.from_user.id
+            )
+            await message.answer('Готово!')
+
+            # Сохраняем в PostgreSQL
+            await message.answer('Сохраняю данные в БД..')
+
+            db_data = _save_data_into_db(
+                db=db,
+                validated_data=api_data,
+                resource=data['resource'],
+                telegram_user_id=message.from_user.id
+            )
+            await message.answer(f'Готово! Ответ БД в JSON-формате:\n{db_data}')
 
             # Очищаем состояние
             await state.clear()
 
-            await message.answer('Готово. Можете снова написать команду /get или любую другую(см. /help)')
+            await message.answer(
+                'Все готово. Можете снова написать команду /get или любую другую (см. /help)'
+            )
 
 
         except SQLAlchemyError as e:
@@ -278,8 +335,8 @@ async def get_response_data_handler(message: Message, state: State, db):
             await message.answer('Какая-то ошибка при сохранении в БД, проверьте логи')
 
         except Exception as e:
-            logging.error(f'Произошла ошибка при запросе:\n{e}')
-            await message.answer('Произошла ошибка при запросе, проверьте логи')
+            logging.error(f'Произошла непредвиденная ошибка:\n{e}')
+            await message.answer('Произошла непредвиденная ошибка, проверьте логи')
 
     else:
         await message.answer(

@@ -22,7 +22,7 @@ from handlers.custom_handlers import custom_router
 
 # БД
 from models.db import create_tables
-from middlewares.middlewares import DBMiddleware
+from middlewares.middlewares import ServicesMiddleware
 
 # Google Sheets
 from models.google_sheets import create_google_sheets
@@ -94,7 +94,7 @@ async def loader() -> web.AppRunner:
     await create_google_sheets()
 
     # Регистрация middleware БД
-    dp.message.outer_middleware(DBMiddleware())
+    dp.message.outer_middleware(ServicesMiddleware())
 
     # Инициализируем webhook
     await _set_webhook(bot_instance=bot)

@@ -54,7 +54,7 @@ from models.pydantic_api import (
 
 
 @injectable
-class DBAsyncSessionManager:
+class _DBAsyncSessionManager:
     """
     Класс для зависимостей.
     Инициализирует и возвращает асинхронную сессию.
@@ -93,7 +93,7 @@ class _ServiceBase:
     """
 
     @autowired
-    def __init__(self, db_session_manager: Annotated[DBAsyncSessionManager, Autowired]):
+    def __init__(self, db_session_manager: Annotated[_DBAsyncSessionManager, Autowired]):
         self.db_session_manager = db_session_manager
 
 
