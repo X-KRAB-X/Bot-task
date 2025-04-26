@@ -1,6 +1,7 @@
 FROM nginx:latest
 
 RUN rm /etc/nginx/conf.d/default.conf
+RUN mkdir /etc/nginx/sites-enabled/
 
 COPY andrey-bokarev.ru /etc/nginx/sites-available/
 RUN ln -s /etc/nginx/sites-available/andrey-bokarev.ru /etc/nginx/sites-enabled/andrey-bokarev.ru
