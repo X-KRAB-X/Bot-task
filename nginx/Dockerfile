@@ -6,7 +6,7 @@ RUN mkdir /etc/nginx/sites-enabled/
 
 COPY andrey-bokarev.ru /etc/nginx/sites-available/
 RUN ln -s /etc/nginx/sites-available/andrey-bokarev.ru /etc/nginx/sites-enabled/andrey-bokarev.ru
-RUN service nginx reload
+RUN nginx -s reload
 
 RUN mkdir -p /var/www/certbot
 
