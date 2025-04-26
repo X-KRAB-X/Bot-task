@@ -1,21 +1,14 @@
-FROM nginx:latest AS base
+FROM nginx:latest
 
 RUN rm /etc/nginx/conf.d/default.conf
 
 RUN mkdir /etc/nginx/sites-enabled/
-RUN mkdir /etc/nginx/ssl
 
 COPY andrey-bokarev.ru /etc/nginx/sites-available/
 RUN ln -s /etc/nginx/sites-available/andrey-bokarev.ru /etc/nginx/sites-enabled/andrey-bokarev.ru
+RUN service nginx reload
 
 RUN mkdir -p /var/www/certbot
-
-
-FROM base
-
-COPY --from=base /etc/nginx/sites-available/andrey-bokarev.ru /etc/nginx/sites-available/
-COPY --from=base /etc/nginx/sites-enabled/andrey-bokarev.ru /etc/nginx/sites-enabled/
-COPY --from=base /var/www/certbot /var/www/certbot
 
 RUN apt-get update && apt-get install -y certbot python3-certbot-nginx
 
@@ -27,5 +20,10 @@ RUN certbot --nginx \
     -m ${EMAIL} \
     --non-interactive \
     --agree-tos
+
+RUN mkdir -p /etc/nginx/ssl
+
+RUN ln -s /etc/letsencrypt/live/${DOMAIN}/fullchain.pem /etc/nginx/ssl/fullchain.pem && \
+    ln -s /etc/letsencrypt/live/${DOMAIN}/privkey.pem /etc/nginx/ssl/privkey.pem
 
 EXPOSE 80 443
