@@ -3,7 +3,7 @@ FROM nginx:latest
 RUN rm /etc/nginx/conf.d/default.conf
 
 RUN mkdir /etc/nginx/sites-enabled/
-RUN mkrdir -p /var/www/certbot
+RUN mkdir -p /var/www/certbot
 RUN mkdir /etc/nginx/ssl
 
 COPY andrey-bokarev.ru /etc/nginx/sites-available/
