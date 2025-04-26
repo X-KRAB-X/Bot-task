@@ -20,7 +20,7 @@ sheets = {
         'username',
         'email',
         'phone',
-        'website'
+        'website',
         
         # address
         'address_street',
@@ -60,7 +60,7 @@ async def _create_sheet_if_not_exists(spreadsheet, sheet_name: str, sheet_header
     # Если получится получить лист - ничего не делаем.
     # Иначе - создаем его.
     try:
-        logging.info(f'Получаю лист {sheet_name}')
+        logging.info(f'Проверяю лист {sheet_name}')
 
         worksheet = await asyncio.to_thread(spreadsheet.worksheet, sheet_name)
 

@@ -67,7 +67,7 @@ class _Users(_BaseGHService):
             # Создаем список с данными для заполнения строки
             user_data_list = [
                 telegram_user_id,                   # telegram_user_id
-                datetime.now().isoformat(),                     # created_at
+                datetime.now().isoformat(),         # created_at
 
                 user_api_data.user_id,              # todo_id
                 user_api_data.name,                 # user_id
@@ -107,12 +107,12 @@ class _Posts(_BaseGHService):
 
             # Создаем список с данными для заполнения строки
             post_data_list = [
-                telegram_user_id,       # telegram_user_id
-                datetime.now().isoformat(),         # created_at
-                post_api_data.post_id,  # post_id
-                post_api_data.user_id,  # user_id
-                post_api_data.title,    # title
-                post_api_data.body      # body
+                telegram_user_id,           # telegram_user_id
+                datetime.now().isoformat(), # created_at
+                post_api_data.post_id,      # post_id
+                post_api_data.user_id,      # user_id
+                post_api_data.title,        # title
+                post_api_data.body          # body
             ]
 
             # Получаем лист для заполнения и вносим данные
@@ -134,7 +134,7 @@ class _Comments(_BaseGHService):
             # Создаем список с данными для заполнения строки
             comment_data_list = [
                 telegram_user_id,               # telegram_user_id
-                datetime.now().isoformat(),                 # created_at
+                datetime.now().isoformat(),     # created_at
                 comment_api_data.comment_id,    # comment_id
                 comment_api_data.post_id,       # post_id
                 comment_api_data.name,          # name
@@ -161,7 +161,7 @@ class _Albums(_BaseGHService):
             # Создаем список с данными для заполнения строки
             album_data_list = [
                 telegram_user_id,           # telegram_user_id
-                datetime.now().isoformat(),             # created_at
+                datetime.now().isoformat(), # created_at
                 album_api_data.album_id,    # album_id
                 album_api_data.user_id,     # user_id
                 album_api_data.title,       # title
@@ -186,7 +186,7 @@ class _Photos(_BaseGHService):
             # Создаем список с данными для заполнения строки
             photo_data_list = [
                 telegram_user_id,               # telegram_user_id
-                datetime.now().isoformat(),                 # created_at
+                datetime.now().isoformat(),     # created_at
                 photo_api_data.photo_id,        # photo_id
                 photo_api_data.album_id,        # album_id
                 photo_api_data.title,           # title
@@ -212,12 +212,12 @@ class _Todos(_BaseGHService):
 
             # Создаем список с данными для заполнения строки
             todo_data_list = [
-                telegram_user_id,           # telegram_user_id
-                datetime.now().isoformat(),             # created_at
-                todo_api_data.todo_id,      # todo_id
-                todo_api_data.user_id,      # user_id
-                todo_api_data.title,        # title
-                todo_api_data.completed,    # completed
+                telegram_user_id,               # telegram_user_id
+                datetime.now().isoformat(),     # created_at
+                todo_api_data.todo_id,          # todo_id
+                todo_api_data.user_id,          # user_id
+                todo_api_data.title,            # title
+                todo_api_data.completed,        # completed
             ]
 
             # Получаем лист для заполнения и вносим данные
