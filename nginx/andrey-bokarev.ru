@@ -14,6 +14,10 @@ server {
                 proxy_set_header X-NginX-Proxy true;
         }
 
+        location /.well-known/acme-challenge/ {
+            root /var/www/certbot;
+        }
+
         error_log /var/log/nginx/andrey-bokarev.ru_error.log;
         access_log /var/log/nginx/andrey-bokarev.ru_access.log;
 
