@@ -3,7 +3,7 @@ FROM nginx:latest
 RUN rm /etc/nginx/conf.d/default.conf
 
 COPY andrey-bokarev.ru /etc/nginx/sites-avaliable/
-RUN ls -s /etc/nginx/site-avaliable/andrey-bokarev.ru /etc/nginx/site-enabled/
+RUN ls -s /etc/nginx/sites-avaliable/andrey-bokarev.ru /etc/nginx/sites-enabled/
 
 RUN apt-get update && apt-get install -y certbot python3-certbot-nginx
 
