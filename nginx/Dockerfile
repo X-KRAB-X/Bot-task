@@ -21,7 +21,4 @@ RUN certbot --nginx \
     --non-interactive \
     --agree-tos
 
-RUN ln -s /etc/letsencrypt/live/${DOMAIN}/fullchain.pem /etc/nginx/ssl/fullchain.pem && \
-    ln -s /etc/letsencrypt/live/${DOMAIN}/privkey.pem /etc/nginx/ssl/privkey.pem
-
 EXPOSE 80 443
