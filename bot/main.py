@@ -7,7 +7,7 @@ from loader import loader, bot, clear_webhook
 async def main():
     # await dp.start_polling(bot)
     runner = await loader()
-    print(await bot.get_webhook_info())
+    # print(await bot.get_webhook_info())
 
     try:
         await asyncio.Future()

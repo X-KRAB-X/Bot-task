@@ -1,0 +1,17 @@
+services:
+  bot:
+    build: .
+    restart: always
+    env_file:
+      - .env
+    expose:
+      - 8000
+
+  nginx:
+    build: ./nginx
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - bot
