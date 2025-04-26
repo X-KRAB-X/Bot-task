@@ -95,6 +95,7 @@ class _Users(_BaseGHService):
 
         except Exception as e:
             logging.error(f'Произошла ошибка при сохранении записи в Google Sheets:\n{e}')
+            raise
 
 
 @injectable
@@ -120,6 +121,7 @@ class _Posts(_BaseGHService):
 
         except Exception as e:
             logging.error(f'Произошла ошибка при сохранении записи в Google Sheets:\n{e}')
+            raise
 
 
 @injectable
@@ -146,6 +148,7 @@ class _Comments(_BaseGHService):
 
         except Exception as e:
             logging.error(f'Произошла ошибка при сохранении записи в Google Sheets:\n{e}')
+            raise
 
 
 @injectable
@@ -170,6 +173,7 @@ class _Albums(_BaseGHService):
 
         except Exception as e:
             logging.error(f'Произошла ошибка при сохранении записи в Google Sheets:\n{e}')
+            raise
 
 
 @injectable
@@ -196,6 +200,7 @@ class _Photos(_BaseGHService):
 
         except Exception as e:
             logging.error(f'Произошла ошибка при сохранении записи в Google Sheets:\n{e}')
+            raise
 
 
 @injectable
@@ -221,6 +226,7 @@ class _Todos(_BaseGHService):
 
         except Exception as e:
             logging.error(f'Произошла ошибка при сохранении записи в Google Sheets:\n{e}')
+            raise
 
 
 @injectable

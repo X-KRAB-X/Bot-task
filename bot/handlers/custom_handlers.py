@@ -293,7 +293,7 @@ async def get_response_data_handler(message: Message, state: FSMContext, db, gh)
             # Получаем данные API
             await message.answer('Отправляю запрос и собираю данные..')
 
-            api_data = _get_api_data(
+            api_data = await _get_api_data(
                 resource=data['resource'],
                 resource_id=int(message.text),
                 pydantic_model=data['pydantic_model']
