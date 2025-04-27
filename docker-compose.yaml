@@ -18,4 +18,4 @@ services:
     volumes:
       - ./nginx/certs:/etc/nginx/ssl
       - ./nginx/andrey-bokarev.ru:/etc/nginx/sites-available/andrey-bokarev.ru
-    command: /bin/sh -c 'ln -s /etc/nginx/sites-available/andrey-bokarev.ru /etc/nginx/sites-enabled/andrey-bokarev.ru && nginx -g "daemon off;"'
+    command: /bin/sh -c 'mkdir -p /etc/nginx/sites-enabled && ln -s /etc/nginx/sites-available/andrey-bokarev.ru /etc/nginx/sites-enabled/andrey-bokarev.ru && nginx -g "daemon off;"'
