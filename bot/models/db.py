@@ -12,7 +12,7 @@ from sqlalchemy.ext.asyncio import create_async_engine
 from config.config import DATABASE_URL
 
 
-engine = create_async_engine(url=DATABASE_URL, echo=True) # echo=True для тестов
+# engine = create_async_engine(url=DATABASE_URL, echo=True) # echo=True для тестов
 Base = declarative_base()
 
 # --- Модели

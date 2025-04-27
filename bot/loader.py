@@ -37,7 +37,7 @@ bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTM
 # Создаем главный роутер
 main_router = Router()
 
-main_router.include_router(custom_router)
+# main_router.include_router(custom_router)
 main_router.include_router(default_router)
 
 
@@ -94,7 +94,7 @@ async def loader() -> web.AppRunner:
     # await create_google_sheets()
 
     # Регистрация middleware БД
-    dp.message.outer_middleware(ServicesMiddleware())
+    # dp.message.outer_middleware(ServicesMiddleware())
 
     # Инициализируем webhook
     await _set_webhook(bot_instance=bot)
