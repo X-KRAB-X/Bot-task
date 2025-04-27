@@ -88,10 +88,10 @@ async def loader() -> web.AppRunner:
     load_injection_container()
 
     # Создаем таблицы БД если их нет
-    await create_tables()
+    # await create_tables()
 
     # Создаем листы в Google Sheets
-    await create_google_sheets()
+    # await create_google_sheets()
 
     # Регистрация middleware БД
     dp.message.outer_middleware(ServicesMiddleware())
