@@ -15,3 +15,7 @@ venv/
 
 # .env
 *.env
+
+# ssl certs
+certs/
+*.pem

@@ -15,3 +15,7 @@ services:
       - 443:443
     depends_on:
       - bot
+    volumes:
+      - ./nginx/certs:/etc/nginx/ssl
+      - ./nginx/andrey-bokarev.ru:/etc/nginx/sites-available/andrey-bokarev.ru
+    command: /bin/sh -c 'ln -s /etc/nginx/sites-available/andrey-bokarev.ru /etc/nginx/sites-enabled/andrey-bokarev.ru && nginx -g "daemon off;"'

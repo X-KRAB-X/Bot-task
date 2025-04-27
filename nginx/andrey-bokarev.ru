@@ -14,25 +14,26 @@ server {
                 proxy_set_header X-NginX-Proxy true;
         }
 
-        location /.well-known/acme-challenge/ {
-            root /var/www/certbot;
-        }
-
         error_log /var/log/nginx/andrey-bokarev.ru_error.log;
         access_log /var/log/nginx/andrey-bokarev.ru_access.log;
 
-
     listen 443 ssl;
-    ssl_certificate /etc/letsencrypt/live/andrey-bokarev.ru/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/andrey-bokarev.ru/privkey.pem;
-    include /etc/letsencrypt/options-ssl-nginx.conf; 
-    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; 
-
-
+    ssl_certificate /etc/nginx/ssl/fullchain.pem; 
+    ssl_certificate_key /etc/nginx/ssl/privkey.pem; 
 }
 
 server {
-    listen 80;
-    server_name andrey-bokarev.ru www.andrey-bokarev.ru;
-    return 301 https://$host$request_uri;
+    if ($host = www.andrey-bokarev.ru) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    if ($host = andrey-bokarev.ru) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+        listen 80;
+        server_name andrey-bokarev.ru www.andrey-bokarev.ru;
+    return 404; # managed by Certbot
+
 }
