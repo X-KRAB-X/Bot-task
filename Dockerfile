@@ -18,7 +18,8 @@ RUN apt-get install -y --no-install-recommends \
     python3-pip \
     nginx \
     postgresql postgresql-client \
-    gcc
+    gcc \
+    libpq-dev
 
 # Копирование файлов
 COPY requirements.txt requirements.txt
@@ -40,4 +41,4 @@ RUN cp ./nginx/certs/privkey.pem /etc/nginx/ssl/privkey.pem
 RUN nginx -t
 
 # Запуск
-ENTRYPOINT service nginx restart && python3 ./bot/main.py
+ENTRYPOINT ["nginx", "-g", "daemon off;"] && python3 ./bot/main.py
