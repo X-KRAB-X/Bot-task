@@ -20,11 +20,11 @@ RUN apt-get install -y --no-install-recommends \
     postgresql postgresql-client 
 
 # Настройка БД
-RUN echo "host all andrey localhost trust" >> /etc/postgresql/16/main/ph_hba.conf
-RUN echo "listen_addresses='localhost'" >> /etc/postgresql/16/main/postgresql.conf
+RUN echo "host all andrey localhost trust" >> /etc/postgresql/14/main/ph_hba.conf
+RUN echo "listen_addresses='localhost'" >> /etc/postgresql/14/main/postgresql.conf
 
-RUN sudo -u postgres createuser -s bot_user
-RUN sudo -u postgres createdb bot_local_base -O bot_user
+RUN -u postgres createuser -s bot_user
+RUN -u postgres createdb bot_local_base -O bot_user
 
 # Копирование файлов
 COPY requirements.txt requirements.txt
