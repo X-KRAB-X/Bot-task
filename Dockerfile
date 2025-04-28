@@ -17,7 +17,8 @@ RUN apt-get install -y --no-install-recommends \
     python3 \
     python3-pip \
     nginx \
-    postgresql postgresql-client 
+    postgresql postgresql-client \
+    gcc
 
 # Копирование файлов
 COPY requirements.txt requirements.txt
