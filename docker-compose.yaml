@@ -1,6 +1,7 @@
 services:
   bot:
     build: .
+    restart: always
     ports:
       - 443:443
       - 80:80
@@ -15,5 +16,6 @@ services:
     environment:
       - POSTGRES_PASSWORD=12345
       - POSTGRES_USER=bot_user
+      - POSTGRES_DB=bot_db
     expose:
       - 5432
