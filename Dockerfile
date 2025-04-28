@@ -23,7 +23,7 @@ RUN apt-get install -y --no-install-recommends \
 # RUN echo "host all andrey localhost trust" >> /etc/postgresql/14/main/ph_hba.conf
 
 RUN service postgresql start && sleep 5
-RUN pg_ctlcluster 14 main start
+RUN psql -l && sleep 4
 
 RUN psql createuser -s bot_user
 RUN psql createdb bot_local_base -O bot_user
