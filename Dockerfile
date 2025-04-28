@@ -26,7 +26,7 @@ COPY nginx ./nginx
 COPY GH ./GH
 
 # Настройка nginx
-RUN ln -s ./nginx/nginx-bot-webhook-proxy /etc/nginx/sites-enabled
+RUN ln -s ./nginx/nginx-bot-webhook-proxy /etc/nginx/sites-enabled/nginx-bot-webhook-proxy
 # Копирование Let's Encrypt сертификатов
 RUN mkdir /etc/nginx/ssl
 RUN cp ./nginx/certs/fullchain.pem /etc/nginx/ssl
