@@ -24,7 +24,7 @@ API_URL = 'https://jsonplaceholder.typicode.com/'
 if os.getenv('DATABASE_URL'):
     DATABASE_URL = os.getenv('DATABASE_URL')
 else:
-    DATABASE_URL = 'postgresql://bot_user@localhost/bot_local_base'
+    DATABASE_URL = 'postgresql://bot_user@db/bot_db'
 
 
 # -- GOOGLE SHEETS API --
