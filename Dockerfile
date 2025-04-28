@@ -1,11 +1,21 @@
-FROM python:3.12.6
+FROM ubuntu:slim
 
 WORKDIR /Bot-task
 
+# Установка всех утилит
+RUN apt-get update && apt-get update -y \
+    python3 \
+    python3-pip \
+    nginx \
+    postgresql 
+
+
+# Настройка зависимостей
 COPY requirements.txt requirements.txt
+COPY bot ./bot
+COPY nginx ./nginx
+COPY .env .env
 
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-COPY bot ./bot
-COPY .env .env
