@@ -25,16 +25,16 @@ COPY bot ./bot
 COPY nginx ./nginx
 COPY GH ./GH
 
+# Установка зависимостей
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
+
 # Настройка nginx
 RUN cp ./nginx/nginx-bot-webhook-proxy /etc/nginx/sites-enabled/
 # Копирование Let's Encrypt сертификатов
 RUN mkdir /etc/nginx/ssl
 RUN cp ./nginx/certs/fullchain.pem /etc/nginx/ssl/fullchain.pem
 RUN cp ./nginx/certs/privkey.pem /etc/nginx/ssl/privkey.pem
-
-# Установка зависимостей
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
 
 RUN nginx -t
 
