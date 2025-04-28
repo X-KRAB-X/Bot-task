@@ -22,6 +22,6 @@ COPY bot ./bot
 COPY nginx ./nginx
 COPY .env .env
 
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+# RUN pip install --upgrade pip
+# RUN pip install -r requirements.txt
 
