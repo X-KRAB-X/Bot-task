@@ -3,7 +3,7 @@ FROM ubuntu:slim
 WORKDIR /Bot-task
 
 # Установка всех утилит
-RUN apt-get update && apt-get update -y \
+RUN apt-get update && apt-get install -y \
     python3 \
     python3-pip \
     nginx \
