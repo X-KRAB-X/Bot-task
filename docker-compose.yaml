@@ -4,5 +4,5 @@ services:
     ports:
       - 443:443
       - 80:80
-    command: 'ls && pwd'
-
+    env_file:
+      - .env

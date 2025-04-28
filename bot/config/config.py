@@ -1,15 +1,11 @@
-import dotenv
 import os
 
 from aiogram.types import BotCommand
 
 
-if dotenv.find_dotenv():
-    dotenv.load_dotenv()
-else:
-    exit('Не найдет файл .env')
-
 BOT_TOKEN = os.getenv('BOT_TOKEN')
+print(os.getenv('GOOGLE_KEY_PATH')) # Проверка
+print(os.getenv('DOMAIN_NAME')) # Проверка
 
 # -- Webhooks --
 WEB_SERVER_HOST = '127.0.0.1'
@@ -17,7 +13,7 @@ WEB_SERVER_PORT = 8000
 
 WEBHOOK_PATH = '/webhook'
 # WEBHOOK_SECRET
-WEBHOOK_URL = 'https://andrey-bokarev.ru'
+WEBHOOK_URL = os.getenv('DOMAIN_NAME')
 
 
 # -- API --
@@ -25,12 +21,15 @@ API_URL = 'https://jsonplaceholder.typicode.com/'
 
 
 # -- DATABASE --
-DATABASE_URL = 'postgresql+asyncpg://andrey:joker2500@localhost/test_base'
+if os.getenv('DATABASE_URL'):
+    DATABASE_URL = os.getenv('DATABASE_URL')
+else:
+    DATABASE_URL = 'postgresql://bot_user@localhost/bot_local_base'
 
 
 # -- GOOGLE SHEETS API --
-CREDENTIALS_FILE = '/home/andrey/test-telegram-project-457912-44807d6a9fe6.json'
-SPREADSHEET_ID = '1f2MCcCE5yyH8DNMNTBmTNljTH7RU_70-GyIygDA3nNI'
+CREDENTIALS_FILE = os.getenv('GOOGLE_KEY_PATH')
+SPREADSHEET_ID = os.getenv('SPREADSHEET_ID')
 SCOPES = [
     'https://www.googleapis.com/auth/spreadsheets',
     'https://www.googleapis.com/auth/drive'
