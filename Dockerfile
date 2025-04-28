@@ -41,4 +41,4 @@ RUN cp ./nginx/certs/privkey.pem /etc/nginx/ssl/privkey.pem
 RUN nginx -t
 
 # Запуск
-ENTRYPOINT ["nginx", "-g", "daemon off;"] && python3 ./bot/main.py
+ENTRYPOINT service nginx restart && python3 ./bot/main.py
