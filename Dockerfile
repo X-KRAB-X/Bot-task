@@ -21,7 +21,6 @@ RUN apt-get install -y --no-install-recommends \
 
 # Настройка БД
 RUN echo "host all andrey localhost trust" >> /etc/postgresql/14/main/ph_hba.conf
-RUN echo "listen_addresses='localhost'" >> /etc/postgresql/14/main/postgresql.conf
 
 RUN service postgresql start && sleep 10
 
