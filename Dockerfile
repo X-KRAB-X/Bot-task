@@ -20,11 +20,11 @@ RUN apt-get install -y --no-install-recommends \
     postgresql postgresql-client 
 
 # Настройка БД
-RUN echo "host all all 127.0.0.1/32 trust" >> /etc/postgresql/14/main/pg_hba.conf
+RUN echo "listen_addresses = '*'" >> /etc/postgresql/14/main/postgresql.conf
+RUN echo "host all all 0.0.0.0/0 trust" >> /etc/postgresql/14/main/pg_hba.conf
 
-RUN service postgresql start && sleep 5
+RUN service postgresql start && sleep 5 && service postgresql status && sleep 5
 # RUN service postgresql status && sleep 5
-RUN ls -l "/var/log/postgresql" %% sleep 10
 
 RUN psql createuser -s bot_user
 RUN psql createdb bot_local_base -O bot_user
