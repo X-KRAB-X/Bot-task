@@ -6,7 +6,10 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 WORKDIR /Bot-task
 
 # Установка всех утилит
-RUN apt-get update && apt-get install -y \
+RUN apt-get update 
+
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get install -y --no-install-recommends \
     python3 \
     python3-pip \
     nginx \
