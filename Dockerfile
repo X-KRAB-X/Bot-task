@@ -1,4 +1,4 @@
-FROM ubuntu:slim
+FROM ubuntu:jammy
 
 WORKDIR /Bot-task
 
