@@ -35,6 +35,8 @@ RUN cp ./nginx/certs/privkey.pem /etc/nginx/ssl
 # Установка зависимостей
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
-#
+
+RUN nginx -t
+
 # Запуск
-ENTRYPOINT service nginx start && python3 ./bot/main.py
+ENTRYPOINT service nginx restart && python3 ./bot/main.py
