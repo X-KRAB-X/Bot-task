@@ -1,8 +1,8 @@
-version: '3.9'
 services:
   bot:
     build: .
     ports:
       - 443:443
       - 80:80
+    command: 'ls && pwd'
 
