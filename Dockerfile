@@ -11,9 +11,9 @@ RUN apt-get update
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get install -y --no-install-recommends \
     python3 \
-    python3-pip \
-    nginx \
-    postgresql 
+    python3-pip 
+    #nginx \
+    #postgresql 
 
 
 # Настройка зависимостей
