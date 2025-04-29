@@ -1,3 +1,8 @@
+"""
+Данный модуль содержит группы состояний для бота.
+"""
+
+
 from aiogram.fsm.state import StatesGroup, State
 
 

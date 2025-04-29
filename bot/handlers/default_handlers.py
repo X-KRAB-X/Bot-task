@@ -1,3 +1,8 @@
+"""
+Набор стандартных обработчиков бота.
+"""
+
+
 import logging
 
 from aiogram import Router, Bot
