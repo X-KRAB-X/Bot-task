@@ -4,7 +4,7 @@ import logging
 from aiogram import Dispatcher, Router, Bot
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
-from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
+from aiogram.webhook.aiohttp_server import SimpleRequestHandler
 
 from config.config import (
     BOT_TOKEN,
@@ -37,7 +37,7 @@ bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTM
 # Создаем главный роутер
 main_router = Router()
 
-# main_router.include_router(custom_router)
+main_router.include_router(custom_router)
 main_router.include_router(default_router)
 
 
