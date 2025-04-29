@@ -9,8 +9,6 @@ from aiogram.types import BotCommand
 
 
 BOT_TOKEN = os.getenv('BOT_TOKEN')
-print(os.getenv('GOOGLE_KEY_PATH')) # Проверка
-print(os.getenv('DOMAIN_NAME')) # Проверка
 
 # -- Webhooks --
 WEB_SERVER_HOST = '127.0.0.1'
@@ -33,8 +31,8 @@ else:
 
 
 # -- GOOGLE SHEETS API --
-_CREDENTIALS_FILE_NAME = os.getenv('GOOGLE_KEY_PATH')
-CREDENTIALS_FILE = os.path.join('/Bot-task', _CREDENTIALS_FILE_NAME) # По умолчанию корень в контейнере - /Bot-task
+_CREDENTIALS_FILE_NAME = os.getenv('GOOGLE_KEY_NAME')
+CREDENTIALS_FILE = os.path.join('Bot-task', 'GH', _CREDENTIALS_FILE_NAME) # По умолчанию в контейнере /Bot-task находится в корне
 SPREADSHEET_ID = os.getenv('SPREADSHEET_ID')
 SCOPES = [
     'https://www.googleapis.com/auth/spreadsheets',
