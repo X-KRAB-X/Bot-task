@@ -1,3 +1,8 @@
+"""
+Модуль с клавиатурой для сценария /get
+"""
+
+
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 users_button = InlineKeyboardButton(text='👤 Пользователи', callback_data='users')

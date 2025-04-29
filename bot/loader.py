@@ -1,5 +1,5 @@
-from aiohttp import web
 import logging
+from aiohttp import web
 
 from aiogram import Dispatcher, Router, Bot
 from aiogram.client.default import DefaultBotProperties
@@ -29,7 +29,6 @@ from models.google_sheets import create_google_sheets
 
 from injectable import load_injection_container
 
-logging.basicConfig(level='DEBUG')
 
 # Создаем бота
 bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
@@ -39,7 +38,6 @@ main_router = Router()
 
 main_router.include_router(custom_router)
 main_router.include_router(default_router)
-
 
 # Создаем диспетчера
 dp = Dispatcher()
@@ -52,6 +50,7 @@ async def _set_webhook(bot_instance: Bot) -> None:
 
     :param bot_instance: Текущий бот
     """
+
     try:
         await bot_instance.set_webhook(
             f'{WEBHOOK_URL}{WEBHOOK_PATH}',
@@ -68,9 +67,10 @@ async def clear_webhook(bot_instance: Bot) -> None:
 
     :param bot_instance: Текущий бот
     """
-    logging.info(f'Удален вебхук: {WEBHOOK_URL}{WEBHOOK_PATH}')
+
     try:
         await bot_instance.delete_webhook(drop_pending_updates=True)
+        logging.info(f'Удален вебхук: {WEBHOOK_URL}{WEBHOOK_PATH}')
     except Exception as e:
         logging.error(f'Произошла ошибка при очистке вебхука:\n{e}')
 
@@ -79,6 +79,7 @@ async def loader() -> web.AppRunner:
     """
     Сборка и настройка всех частей бота:
     Веб-приложение, Вебхук для бота, БД, Листы Google Sheets, команды.
+    Возвращает объект Runner для управления веб-приложением.
     """
 
     # Загрузка команд в бота

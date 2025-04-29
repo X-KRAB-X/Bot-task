@@ -1,3 +1,11 @@
+"""
+Данный модуль содержит в себе все классы, зависимости, методы для работы с Google Sheets.
+
+Архитектуру можно представить таким образом:
+ABS Class __init__() ---> `Классы для создания записей в листах` ---> Class ServiceGH для передачи в хендлеры.
+"""
+
+
 import logging
 import asyncio
 from typing import Annotated
@@ -56,13 +64,26 @@ class _BaseGHService:
 
 @injectable
 class _Users(_BaseGHService):
-    async def create_user(self, pydantic_model: UserModel, telegram_user_id: int):
+    """
+    Класс для работы с пользователями.
+    """
+
+    async def create_user(self, user_model: UserModel, telegram_user_id: int):
+        """
+        Метод для создания записи данных пользователя в GH.
+        Отличается от остальных тем, что делает вложенность - "плоской".
+        {company: {name: '...', catchPhrase: '...'}} --> company_name, company_catch_phrase
+
+        :param user_model: Pydantic-модель пользователя.
+        :param telegram_user_id: ID пользователя.
+        """
+
         try:
             # Получаем данные от API
-            user_address_geo_api_data = pydantic_model.address.geo
-            user_address_api_data = pydantic_model.address
-            user_company_api_data = pydantic_model.company
-            user_api_data = pydantic_model
+            user_address_geo_api_data = user_model.address.geo
+            user_address_api_data = user_model.address
+            user_company_api_data = user_model.company
+            user_api_data = user_model
 
             # Создаем список с данными для заполнения строки
             user_data_list = [
@@ -100,10 +121,21 @@ class _Users(_BaseGHService):
 
 @injectable
 class _Posts(_BaseGHService):
-    async def create_post(self, pydantic_model: PostModel, telegram_user_id: int):
+    """
+    Класс для работы с постами.
+    """
+
+    async def create_post(self, post_model: PostModel, telegram_user_id: int):
+        """
+        Метод для создания записи данных поста в GH.
+
+        :param post_model: Pydantic-модель поста.
+        :param telegram_user_id: ID пользователя.
+        """
+
         try:
             # Получаем данные от API
-            post_api_data = pydantic_model
+            post_api_data = post_model
 
             # Создаем список с данными для заполнения строки
             post_data_list = [
@@ -126,10 +158,21 @@ class _Posts(_BaseGHService):
 
 @injectable
 class _Comments(_BaseGHService):
-    async def create_comment(self, pydantic_model: CommentModel, telegram_user_id: int):
+    """
+    Класс для работы с комментариями.
+    """
+
+    async def create_comment(self, comment_model: CommentModel, telegram_user_id: int):
+        """
+        Метод для создания записи данных комментария в GH.
+
+        :param comment_model: Pydantic-модель поста.
+        :param telegram_user_id: ID пользователя.
+        """
+
         try:
             # Получаем данные от API
-            comment_api_data = pydantic_model
+            comment_api_data = comment_model
 
             # Создаем список с данными для заполнения строки
             comment_data_list = [
@@ -153,10 +196,21 @@ class _Comments(_BaseGHService):
 
 @injectable
 class _Albums(_BaseGHService):
-    async def create_album(self, pydantic_model: AlbumModel, telegram_user_id: int):
+    """
+    Класс для работы с комментариями.
+    """
+
+    async def create_album(self, album_model: AlbumModel, telegram_user_id: int):
+        """
+        Метод для создания записи данных альбома в GH.
+
+        :param album_model: Pydantic-модель поста.
+        :param telegram_user_id: ID пользователя.
+        """
+
         try:
             # Получаем данные от API
-            album_api_data = pydantic_model
+            album_api_data = album_model
 
             # Создаем список с данными для заполнения строки
             album_data_list = [
@@ -178,7 +232,18 @@ class _Albums(_BaseGHService):
 
 @injectable
 class _Photos(_BaseGHService):
+    """
+    Класс для работы с комментариями.
+    """
+
     async def create_photo(self, photo_pydantic: PhotoModel, telegram_user_id: int):
+        """
+        Метод для создания записи данных фотографии в GH.
+
+        :param photo_pydantic: Pydantic-модель поста.
+        :param telegram_user_id: ID пользователя.
+        """
+
         try:
             # Получаем данные от API
             photo_api_data = photo_pydantic
@@ -205,7 +270,18 @@ class _Photos(_BaseGHService):
 
 @injectable
 class _Todos(_BaseGHService):
+    """
+    Класс для работы с комментариями.
+    """
+
     async def create_todo(self, todo_pydantic: TodoModel, telegram_user_id: int):
+        """
+        Метод для создания записи данных заметки в GH.
+
+        :param todo_pydantic: Pydantic-модель поста.
+        :param telegram_user_id: ID пользователя.
+        """
+
         try:
             # Получаем данные от API
             todo_api_data = todo_pydantic

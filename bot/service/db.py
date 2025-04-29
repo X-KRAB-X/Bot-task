@@ -1,6 +1,8 @@
 """
-Архитектура выглядит таким образом:
-ABS Class __init__ ---> `Классы для создания записей в таблицах` ---> Class Service для передачи в хендлеры.
+Данный модуль содержит в себе все классы, зависимости, методы для работы с PostgreSQL.
+
+Архитектуру можно представить таким образом:
+ABS Class __init__() ---> `Классы для создания записей в таблицах` ---> Class ServiceDB для передачи в хендлеры.
 """
 
 
@@ -10,7 +12,6 @@ import logging
 
 from injectable import injectable, autowired, Autowired
 
-from sqlalchemy import select
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import SQLAlchemyError
@@ -105,6 +106,15 @@ class _Users(_ServiceBase):
     """
 
     async def create_user(self, user_pydantic: UserModel, telegram_user_id) -> str:
+        """
+        Метод получает модель Pydantic, сохраняет запись в БД и возвращает новую Pydantic модель
+
+        :param user_pydantic: Проверенные данные Pydantic.
+        :param telegram_user_id: ID пользователя, который отправил сообщение боту.
+
+        :return: JSON-Pydantic модель на основе записи из базы данных, в качестве подтверждения.
+        """
+
         async with self.db_session_manager.session() as db:
             try:
 
@@ -188,6 +198,15 @@ class _Comments(_ServiceBase):
     """
 
     async def create_comment(self, comment_pydantic: CommentModel, telegram_user_id) -> str:
+        """
+        Метод получает модель Pydantic, сохраняет запись в БД и возвращает новую Pydantic модель
+
+        :param comment_pydantic: Проверенные данные Pydantic.
+        :param telegram_user_id: ID пользователя, который отправил сообщение боту.
+
+        :return: JSON-Pydantic модель на основе записи из базы данных, в качестве подтверждения.
+        """
+
         async with self.db_session_manager.session() as db:
             try:
 
@@ -221,6 +240,15 @@ class _Albums(_ServiceBase):
     """
 
     async def create_album(self, album_pydantic: AlbumModel, telegram_user_id) -> str:
+        """
+        Метод получает модель Pydantic, сохраняет запись в БД и возвращает новую Pydantic модель
+
+        :param album_pydantic: Проверенные данные Pydantic.
+        :param telegram_user_id: ID пользователя, который отправил сообщение боту.
+
+        :return: JSON-Pydantic модель на основе записи из базы данных, в качестве подтверждения.
+        """
+
         async with self.db_session_manager.session() as db:
             try:
 
@@ -255,6 +283,15 @@ class _Photos(_ServiceBase):
     """
 
     async def create_photo(self, photo_pydantic: PhotoModel, telegram_user_id) -> str:
+        """
+        Метод получает модель Pydantic, сохраняет запись в БД и возвращает новую Pydantic модель
+
+        :param photo_pydantic: Проверенные данные Pydantic.
+        :param telegram_user_id: ID пользователя, который отправил сообщение боту.
+
+        :return: JSON-Pydantic модель на основе записи из базы данных, в качестве подтверждения.
+        """
+
         async with self.db_session_manager.session() as db:
             try:
 
@@ -288,6 +325,15 @@ class _Todos(_ServiceBase):
     """
 
     async def create_todo(self, todo_pydantic: TodoModel, telegram_user_id) -> str:
+        """
+        Метод получает модель Pydantic, сохраняет запись в БД и возвращает новую Pydantic модель
+
+        :param todo_pydantic: Проверенные данные Pydantic.
+        :param telegram_user_id: ID пользователя, который отправил сообщение боту.
+
+        :return: JSON-Pydantic модель на основе записи из базы данных, в качестве подтверждения.
+        """
+
         async with self.db_session_manager.session() as db:
             try:
 
