@@ -22,10 +22,10 @@ RUN apt-get install -y --no-install-recommends \
     libpq-dev
 
 # Копирование файлов
-COPY requirements.txt requirements.txt
 COPY bot ./bot
 COPY nginx ./nginx
 COPY GH ./GH
+COPY requirements.txt requirements.txt
 
 # Установка зависимостей
 RUN pip install --upgrade pip
