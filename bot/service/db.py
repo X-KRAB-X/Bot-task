@@ -145,30 +145,6 @@ class _Posts(_ServiceBase):
     Реализует метод create_post, который отвечает за сохранение в БД поста и ID тг-пользователя.
     """
 
-    # async def get_post(self, post_id):
-    #     """
-    #     Метод для получения поста из БД.
-    #     Пока что не задуман для использования.
-    #     """
-    #     try:
-    #         async with self.db_session_manager.session() as db:
-    #
-    #             # Создаем запрос и получаем данные
-    #             query = select(PostDBModel).where(PostDBModel.id == post_id)
-    #             result = await db.execute(query)
-    #             post = result.scalar_or_none()
-    #
-    #             if post:
-    #                 post_validated = PostModelFromDB.model_validate(post)
-    #
-    #                 # Возвращаем JSON ответ
-    #                 return post_validated.model_dump_json()
-    #             else:
-    #                 return None
-    #     except Exception as e:
-    #         logging.error(f'Ошибка при получении поста:\n{e}')
-    #         raise
-
     async def create_post(self, post_pydantic: PostModel, telegram_user_id) -> str:
         """
         Метод получает модель Pydantic, сохраняет запись в БД и возвращает новую Pydantic модель

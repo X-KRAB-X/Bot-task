@@ -1,5 +1,4 @@
 import logging
-import json
 
 from aiogram import Router, F
 from aiogram.filters import Command, StateFilter

@@ -1,13 +1,12 @@
-import dotenv
+"""
+Внутренние настройки бота.
+Данный модуль также служит сборником переменных окружения.
+"""
+
 import os
 
 from aiogram.types import BotCommand
 
-
-if dotenv.find_dotenv():
-    dotenv.load_dotenv()
-else:
-    exit('Не найдет файл .env')
 
 BOT_TOKEN = os.getenv('BOT_TOKEN')
 
@@ -17,7 +16,7 @@ WEB_SERVER_PORT = 8000
 
 WEBHOOK_PATH = '/webhook'
 # WEBHOOK_SECRET
-WEBHOOK_URL = 'https://andrey-bokarev.ru'
+WEBHOOK_URL = os.getenv('DOMAIN_NAME')
 
 
 # -- API --
@@ -25,12 +24,16 @@ API_URL = 'https://jsonplaceholder.typicode.com/'
 
 
 # -- DATABASE --
-DATABASE_URL = 'postgresql+asyncpg://andrey:joker2500@localhost/test_base'
+if os.getenv('DATABASE_URL'):
+    DATABASE_URL = os.getenv('DATABASE_URL')
+else:
+    DATABASE_URL = 'postgresql+asyncpg://bot_user:12345@db/bot_db'
 
 
 # -- GOOGLE SHEETS API --
-CREDENTIALS_FILE = '/home/andrey/test-telegram-project-457912-44807d6a9fe6.json'
-SPREADSHEET_ID = '1f2MCcCE5yyH8DNMNTBmTNljTH7RU_70-GyIygDA3nNI'
+_CREDENTIALS_FILE_NAME = os.getenv('GOOGLE_KEY_NAME')
+CREDENTIALS_FILE = os.path.join('Bot-task', 'GH', _CREDENTIALS_FILE_NAME) # По умолчанию в контейнере /Bot-task находится в корне
+SPREADSHEET_ID = os.getenv('SPREADSHEET_ID')
 SCOPES = [
     'https://www.googleapis.com/auth/spreadsheets',
     'https://www.googleapis.com/auth/drive'

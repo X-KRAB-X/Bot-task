@@ -4,7 +4,7 @@ import logging
 from aiogram import Dispatcher, Router, Bot
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
-from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
+from aiogram.webhook.aiohttp_server import SimpleRequestHandler
 
 from config.config import (
     BOT_TOKEN,
