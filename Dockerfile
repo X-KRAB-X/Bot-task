@@ -22,9 +22,9 @@ RUN apt-get install -y --no-install-recommends \
     libpq-dev
 
 # Копирование файлов
-COPY bot ./bot
 COPY nginx ./nginx
 COPY GH ./GH
+COPY bot ./bot
 COPY requirements.txt requirements.txt
 
 # Установка зависимостей
@@ -37,8 +37,6 @@ RUN cp ./nginx/nginx-bot-webhook-proxy /etc/nginx/sites-enabled/
 RUN mkdir /etc/nginx/ssl
 RUN cp ./nginx/certs/fullchain.pem /etc/nginx/ssl/fullchain.pem
 RUN cp ./nginx/certs/privkey.pem /etc/nginx/ssl/privkey.pem
-
-RUN nginx -t
 
 # Запуск
 ENTRYPOINT service nginx restart && python3 ./bot/main.py
