@@ -32,7 +32,7 @@ else:
 
 # -- GOOGLE SHEETS API --
 _CREDENTIALS_FILE_NAME = os.getenv('GOOGLE_KEY_NAME')
-CREDENTIALS_FILE = os.path.join('Bot-task', 'GH', _CREDENTIALS_FILE_NAME) # По умолчанию в контейнере /Bot-task находится в корне
+CREDENTIALS_FILE = os.path.join('/Bot-task', 'GH', _CREDENTIALS_FILE_NAME) # По умолчанию в контейнере /Bot-task находится в корне
 SPREADSHEET_ID = os.getenv('SPREADSHEET_ID')
 SCOPES = [
     'https://www.googleapis.com/auth/spreadsheets',
